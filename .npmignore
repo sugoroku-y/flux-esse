@@ -1,0 +1,10 @@
+*.tgz
+tsconfig*.json
+jest*.config.ts
+jest*.config.js
+coverage/
+.eslint*
+.prettier*
+tests/
+.vscode/
+tools/
