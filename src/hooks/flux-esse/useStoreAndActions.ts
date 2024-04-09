@@ -22,6 +22,9 @@ type ReducibleTypes<Store extends object> = keyof {
 type Actions<Store extends object> = Readonly<
     Pick<Store, ReducibleTypes<Store>>
 >;
+type ImmutableStore<Store extends object> = Immutable<
+    Omit<Store, ReducibleTypes<Store>>
+>;
 
 /**
  * シンプルなFLUXアーキテクチャを実現するカスタムフックです。
@@ -29,6 +32,8 @@ type Actions<Store extends object> = Readonly<
  *
  * このカスタムフックを呼び出したあと変更不可になるので注意してください。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
+ *
+ * ただし、StoreからはActionに応じて処理を行うメソッドが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
  * @example
@@ -65,5 +70,5 @@ export function useStoreAndActions<Store extends object>(initialStore: Store) {
         // eslint-disable-next-line react-hooks/exhaustive-deps -- 初回だけ実行する
         [],
     );
-    return [store, actions as Actions<Store>] as const;
+    return [store as ImmutableStore<Store>, actions as Actions<Store>] as const;
 }

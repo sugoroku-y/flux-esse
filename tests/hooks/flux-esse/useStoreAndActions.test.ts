@@ -33,7 +33,7 @@ describe('flux-esse', () => {
                 }),
             ).toEqualType<
                 readonly [
-                    Immutable<{ text: string; change(newText: string): void }>,
+                    Immutable<{ text: string }>,
                     Readonly<{ change(newText: string): void }>,
                 ]
             >();
