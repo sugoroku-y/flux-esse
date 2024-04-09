@@ -1,1 +1,1 @@
-export { useStoreAndDispatch } from './hooks/flux-esse/useStoreAndDispatch';
+export { useStoreAndActions } from './hooks/flux-esse/useStoreAndActions';
