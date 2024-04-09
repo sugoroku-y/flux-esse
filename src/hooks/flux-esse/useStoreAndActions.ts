@@ -1,4 +1,4 @@
-import { type Reducer, useReducer, useMemo } from 'react';
+import { useReducer, useMemo } from 'react';
 import { type Immutable, freeze, produce } from 'immer';
 
 interface ActionPayload {
@@ -41,11 +41,7 @@ type ImmutableStore<Store extends object> = Immutable<
  */
 export function useStoreAndActions<Store extends object>(initialStore: Store) {
     const [store, dispatch] = useReducer(
-        produce<Reducer<Immutable<Store>, ActionPayload>>(
-            (draft, { type, payload }) => {
-                (draft as HandlerMap)[type](...payload);
-            },
-        ),
+        reducer<Immutable<Store>>,
         initialStore,
         (s) => freeze(s) as Immutable<Store>,
     );
@@ -72,3 +68,8 @@ export function useStoreAndActions<Store extends object>(initialStore: Store) {
     );
     return [store as ImmutableStore<Store>, actions as Actions<Store>] as const;
 }
+
+const reducer: <Store>(previous: Store, action: ActionPayload) => Store =
+    produce((draft, { type, payload }) => {
+        (draft as HandlerMap)[type](...payload);
+    });
