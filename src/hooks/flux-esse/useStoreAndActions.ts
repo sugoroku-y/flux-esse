@@ -1,4 +1,4 @@
-import { useReducer, useMemo } from 'react';
+import { type Dispatch, useReducer, useMemo } from 'react';
 import { type Immutable, freeze, produce, isDraftable, immerable } from 'immer';
 
 interface ActionPayload {
@@ -7,6 +7,8 @@ interface ActionPayload {
 }
 
 type HandlerMap = Record<PropertyKey, (...payload: unknown[]) => void>;
+
+type Action = (...payload: unknown[]) => void;
 
 type ReducibleTypes<Store extends object> = keyof {
     [Type in keyof Store as Store[Type] extends (
@@ -92,26 +94,11 @@ export function useStoreAndActions<Store extends object>(
     );
     // Actionを限定する
     const actions = useMemo(
-        () =>
-            Object.freeze(
-                Object.fromEntries(
-                    Array.from(getAllPropertyKeys(store))
-                        .filter(
-                            (type) =>
-                                typeof (store as HandlerMap)[type] ===
-                                'function',
-                        )
-                        .map((type) => [
-                            type,
-                            (...payload: unknown[]) =>
-                                dispatch({ type, payload }),
-                        ]),
-                ),
-            ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- 初回だけ実行する
+        () => Object.freeze(Object.fromEntries(actionEntries(store, dispatch))),
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- 初回だけ実行するために空配列を指定します。
         [],
     );
-    return [store as ImmutableStore<Store>, actions as Actions<Store>];
+    return [store, actions as Actions<Store>];
 }
 
 const reducer: <Store>(previous: Store, action: ActionPayload) => Store =
@@ -122,7 +109,7 @@ const reducer: <Store>(previous: Store, action: ActionPayload) => Store =
 function initializer<Store extends object>(
     storeSpec: Store | (new () => Store),
 ): Immutable<Store> {
-    // クラスのときはnewしてインスタンス化
+    // クラスのときはnewしてインスタンス化します。
     const initialStore =
         typeof storeSpec === 'function' ? new storeSpec() : storeSpec;
     if (!isDraftable(initialStore)) {
@@ -135,30 +122,50 @@ function initializer<Store extends object>(
     return initialStore as Immutable<Store>;
 }
 
+function* actionEntries<Store extends object>(
+    store: Store,
+    dispatch: Dispatch<ActionPayload>,
+): Generator<[PropertyKey, Action], void, undefined> {
+    for (const type of getAllPropertyKeys(store)) {
+        if (typeof store[type] === 'function') {
+            yield [type, (...payload) => dispatch({ type, payload })];
+        }
+    }
+}
+
 function* getAllPropertyKeys<Target extends object>(
     target: Target,
 ): Generator<keyof Target, void, undefined> {
     const yielded = new Set();
-    if (
-        typeof target.constructor === 'function' &&
-        (target.constructor.prototype === target ||
-            target instanceof target.constructor)
-    ) {
+    if (hasConstructor(target)) {
         // コンストラクタは除外します。
         yielded.add('constructor');
     }
+    for (const obj of prototypes(target)) {
+        for (const key of Reflect.ownKeys(obj)) {
+            // 派生クラス側で列挙済のメンバーは除外します。
+            if (!yielded.has(key)) {
+                yield key as keyof Target;
+                yielded.add(key);
+            }
+        }
+    }
+}
+
+function hasConstructor(target: object) {
+    return (
+        typeof target.constructor === 'function' &&
+        (target.constructor.prototype === target ||
+            target instanceof target.constructor)
+    );
+}
+
+function* prototypes(target: object): Generator<object, void, undefined> {
     for (
         let obj = target;
         obj != null && obj !== Object.prototype;
         obj = Object.getPrototypeOf(obj)
     ) {
-        for (const key of Reflect.ownKeys(obj) as Array<keyof Target>) {
-            if (yielded.has(key)) {
-                // 派生クラス側で列挙済のメンバーは除外します。
-                continue;
-            }
-            yield key;
-            yielded.add(key);
-        }
+        yield obj;
     }
 }
