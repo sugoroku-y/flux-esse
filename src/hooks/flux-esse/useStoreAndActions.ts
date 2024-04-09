@@ -1,5 +1,7 @@
 import { type Dispatch, useReducer, useMemo } from 'react';
 import { type Immutable, freeze, produce, isDraftable, immerable } from 'immer';
+import { assert } from '../../utils/assert';
+import { getAllPropertyKeys } from '../../utils/getAllPropertyKeys';
 
 interface ActionPayload {
     type: PropertyKey;
@@ -145,62 +147,4 @@ function* actionEntries<Store extends object>(
         }
     }
     assert(valid, 'The store must have one or more action handler.');
-}
-
-function* getAllPropertyKeys<Target extends object>(
-    target: Target,
-): Generator<keyof Target, void, undefined> {
-    const yielded = new Set();
-    if (hasConstructor(target)) {
-        // コンストラクタは除外します。
-        yielded.add('constructor');
-    }
-    for (const obj of prototypes(target)) {
-        for (const key of Reflect.ownKeys(obj)) {
-            // 派生クラス側で列挙済のメンバーは除外します。
-            if (!yielded.has(key)) {
-                yield key as keyof Target;
-                yielded.add(key);
-            }
-        }
-    }
-}
-
-function hasConstructor(target: object) {
-    return (
-        typeof target.constructor === 'function' &&
-        (target.constructor.prototype === target ||
-            target instanceof target.constructor)
-    );
-}
-
-function* prototypes(target: object): Generator<object, void, undefined> {
-    for (
-        let obj = target;
-        obj != null && obj !== Object.prototype;
-        obj = Object.getPrototypeOf(obj)
-    ) {
-        yield obj;
-    }
-}
-
-/**
- * 値の確認を行い、falsyなら例外を投げます。
- * @param o 確認する値
- * @param message `o`がFalsyだったときに投げる例外に指定するメッセージ。
- *
- * 文字列、もしくは文字列を返す関数を指定する。省略可
- * @throws oがfalsyだった場合はmessageで指定される文字列で生成された例外を投げる
- */
-export function assert(
-    o: unknown,
-    message?: string | (() => string),
-): asserts o {
-    if (!o) {
-        const ex = new Error(
-            typeof message === 'function' ? message() : message,
-        );
-        Error.captureStackTrace(ex, assert);
-        throw ex;
-    }
 }

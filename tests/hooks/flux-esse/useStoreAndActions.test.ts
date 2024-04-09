@@ -41,6 +41,20 @@ describe('flux-esse', () => {
             act(() => result.current[1].change('test'));
             expect(result.current[0].text).toBe('test');
         });
+        test('no handler', () => {
+            const { result } = renderHook(() => {
+                try {
+                    return useStoreAndActions({});
+                } catch (ex) {
+                    return [, , ex];
+                }
+            });
+            expect(result.current[0]).toBeUndefined();
+            expect(result.current[0]).toBeUndefined();
+            expect(result.current[2]).toEqual(
+                new Error('The store must have one or more action handler.'),
+            );
+        });
         test.skip('compile test', () => {
             expect(
                 useStoreAndActions({
@@ -55,6 +69,24 @@ describe('flux-esse', () => {
                     Readonly<{ change(newText: string): void }>,
                 ]
             >();
+            expect(
+                useStoreAndActions(
+                    class {
+                        text = '';
+                        change(newText: string) {
+                            this.text = newText;
+                        }
+                    },
+                ),
+            ).toEqualType<
+                readonly [
+                    Readonly<{ text: string }>,
+                    Readonly<{ change(newText: string): void }>,
+                ]
+            >();
+            expect(useStoreAndActions({})).toEqualType<never>();
+            expect(useStoreAndActions(class {})).toEqualType<never>();
         });
     });
 });
+
