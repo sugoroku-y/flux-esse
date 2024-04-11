@@ -14,7 +14,7 @@
     "react"
   ],
   "author": "YEBISUYA Sugoroku <yebisuya@gmail.com> (https://qiita.com/sugoroku_y)",
-  "license": "ISC",
+  "license": "MIT",
   "peerDependencies": {
     "immer": "^10.0.3",
     "react": "^18.2.0"
