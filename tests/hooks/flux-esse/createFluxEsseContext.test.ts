@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import { act, render, renderHook } from '@testing-library/react';
 import { createFluxEsseContext, useFluxEsseContext } from '@';
+import { toThrowWithinReactComponent } from '@tests/testing-library/toThrowWithinReactComponent';
 
 describe('createFluxEsseContext', () => {
     test('object literal', () => {
@@ -61,41 +62,15 @@ describe('createFluxEsseContext', () => {
     });
     describe('error', () => {
         test('no handler', () => {
-            const mock = jest
-                .spyOn(console, 'error')
-                .mockImplementation(() => {});
-            try {
-                const exception = new Error(
-                    'The store must have one or more action handler.',
-                );
-                const unhandledException = expect.objectContaining({
-                    type: 'unhandled exception',
-                    detail: exception,
-                });
-                const TestContext: ReturnType<
-                    typeof createFluxEsseContext<{ a(): void }>
-                > = createFluxEsseContext({});
-                expect(() =>
-                    render(createElement(TestContext.Provider)),
-                ).toThrow(exception);
-                expect(console.error).toHaveBeenCalledTimes(3);
-                expect(console.error).toHaveBeenNthCalledWith(
-                    1,
-                    unhandledException,
-                );
-                expect(console.error).toHaveBeenNthCalledWith(
-                    2,
-                    unhandledException,
-                );
-                expect(console.error).toHaveBeenNthCalledWith(
-                    3,
-                    expect.stringMatching(
-                        /^The above error occurred in the <Provider> component:/,
-                    ),
-                );
-            } finally {
-                mock.mockRestore();
-            }
+            toThrowWithinReactComponent({
+                prepare: () =>
+                    createFluxEsseContext({} as Record<string, () => void>),
+                target: (TestContext) => {
+                    render(createElement(TestContext.Provider));
+                },
+                message: 'The store must have one or more action handler.',
+                componentName: 'Provider',
+            });
         });
         test('invalid context', () => {
             expect(() => {

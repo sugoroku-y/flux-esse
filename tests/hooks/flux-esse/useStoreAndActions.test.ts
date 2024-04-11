@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { useStoreAndActions } from '@';
+import { toThrowWithinReactComponent } from '@tests/testing-library/toThrowWithinReactComponent';
 
 describe('flux-esse', () => {
     describe('useStoreAndActions', () => {
@@ -55,6 +56,46 @@ describe('flux-esse', () => {
                 new Error('The store must have one or more action handler.'),
             );
         });
+        test('invalid handler call', () => {
+            toThrowWithinReactComponent({
+                prepare: () =>
+                    renderHook(() =>
+                        useStoreAndActions({
+                            destructure({ _ }: { _: string }) {},
+                        }),
+                    ),
+                target: ({ result }) => {
+                    act(() => {
+                        // @ts-expect-error 引数が必須のメソッドを無理やり引数無しで呼び出す
+                        result.current[1].destructure();
+                    });
+                },
+                message:
+                    "Cannot destructure property '_' of 'undefined' as it is undefined.",
+                componentName: 'TestComponent',
+            });
+        });
+        test('handler disappearance', () => {
+            toThrowWithinReactComponent({
+                prepare: () => {
+                    const { result } = renderHook(() =>
+                        useStoreAndActions({
+                            disappear() {
+                                // @ts-expect-error 無理やりハンドラーを削除
+                                delete this.disappear;
+                            },
+                        }),
+                    );
+                    act(() => result.current[1].disappear());
+                    return { result };
+                },
+                target: ({ result }) => {
+                    act(() => result.current[1].disappear());
+                },
+                message: 'draft[type] is not a function',
+                componentName: 'TestComponent',
+            });
+        });
         test.skip('compile test', () => {
             expect(
                 useStoreAndActions({
@@ -89,4 +130,3 @@ describe('flux-esse', () => {
         });
     });
 });
-
