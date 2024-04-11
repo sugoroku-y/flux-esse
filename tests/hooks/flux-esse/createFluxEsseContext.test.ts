@@ -36,6 +36,15 @@ describe('createFluxEsseContext', () => {
         act(() => component.click());
         expect(component.textContent).toBe('test');
     });
+    test('displayName', () => {
+        const TestContext = createFluxEsseContext({ a() {} });
+        expect(TestContext.displayName).toBe('FluxEsseContext');
+        TestContext.displayName = 'abc';
+        expect(TestContext.displayName).toBe('abc');
+        // @ts-expect-error displayNameを強引にundefinedにする
+        TestContext.displayName = undefined;
+        expect(TestContext.displayName).toBe('');
+    });
     describe('error', () => {
         test('no handler', () => {
             const mock = jest

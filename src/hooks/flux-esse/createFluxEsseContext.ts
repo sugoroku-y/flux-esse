@@ -26,8 +26,9 @@ type Provider<Store extends object> = (
 ) => ReactNode;
 
 interface FluxEsseContext<Store extends object> {
-    original: OriginalContext<Store>;
-    Provider: Provider<Store>;
+    readonly original: OriginalContext<Store>;
+    readonly Provider: Provider<Store>;
+    displayName: string;
 }
 
 /**
@@ -71,8 +72,18 @@ export function createFluxEsseContext<Store extends object>(
         return createElement(original.Provider, { value, ...props });
     };
     return {
-        original,
-        Provider,
+        get original() {
+            return original;
+        },
+        get Provider() {
+            return Provider;
+        },
+        get displayName() {
+            return original.displayName ?? '';
+        },
+        set displayName(value) {
+            original.displayName = value;
+        },
     };
 }
 
