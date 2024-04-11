@@ -30,12 +30,18 @@ type ImmutableStore<Store extends object> = Immutable<
     Omit<Store, ReducibleTypes<Store>>
 >;
 
-type StoreAndActions<Store extends object> = readonly [
+/**
+ * useStoreAndActionsの返値となる型。
+ */
+export type StoreAndActions<Store extends object> = readonly [
     ImmutableStore<Store>,
     Actions<Store>,
 ];
 
-type Validation<Store extends object, T> = [ReducibleTypes<Store>] extends [
+/**
+ * StoreがActionに応じて処理を行うメソッドを持たない場合に、neverにします。
+ */
+export type Validation<Store extends object, T> = [ReducibleTypes<Store>] extends [
     never,
 ]
     ? never
