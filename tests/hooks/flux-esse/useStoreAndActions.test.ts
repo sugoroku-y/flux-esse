@@ -1,11 +1,12 @@
-import { act, renderHook } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import { useStoreAndActions } from '@';
+import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
 import { toThrowWithinReactComponent } from '@tests/testing-library/toThrowWithinReactComponent';
 
 describe('flux-esse', () => {
     describe('useStoreAndActions', () => {
         test('simple', () => {
-            const { result } = renderHook(() =>
+            const { result } = renderHookWithError(() =>
                 useStoreAndActions({
                     text: '',
                     /**
@@ -24,7 +25,7 @@ describe('flux-esse', () => {
             expect(result.current[1]).not.toHaveProperty('text');
         });
         test('simple with class', () => {
-            const { result } = renderHook(() =>
+            const { result } = renderHookWithError(() =>
                 useStoreAndActions(
                     class {
                         text = '';
@@ -43,23 +44,16 @@ describe('flux-esse', () => {
             expect(result.current[0].text).toBe('test');
         });
         test('no handler', () => {
-            const { result } = renderHook(() => {
-                try {
-                    return useStoreAndActions({});
-                } catch (ex) {
-                    return [, , ex];
-                }
-            });
-            expect(result.current[0]).toBeUndefined();
-            expect(result.current[0]).toBeUndefined();
-            expect(result.current[2]).toEqual(
+            expect(() =>
+                renderHookWithError(() => useStoreAndActions({})),
+            ).toThrow(
                 new Error('The store must have one or more action handler.'),
             );
         });
         test('invalid handler call', () => {
             toThrowWithinReactComponent({
                 prepare: () =>
-                    renderHook(() =>
+                    renderHookWithError(() =>
                         useStoreAndActions({
                             destructure({ _ }: { _: string }) {},
                         }),
@@ -78,7 +72,7 @@ describe('flux-esse', () => {
         test('handler disappearance', () => {
             toThrowWithinReactComponent({
                 prepare: () => {
-                    const { result } = renderHook(() =>
+                    const { result } = renderHookWithError(() =>
                         useStoreAndActions({
                             disappear() {
                                 // @ts-expect-error 無理やりハンドラーを削除

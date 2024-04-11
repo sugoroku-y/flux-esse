@@ -1,6 +1,7 @@
 import { createElement } from 'react';
-import { act, render, renderHook } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { createFluxEsseContext, useFluxEsseContext } from '@';
+import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
 import { toThrowWithinReactComponent } from '@tests/testing-library/toThrowWithinReactComponent';
 
 describe('createFluxEsseContext', () => {
@@ -73,40 +74,20 @@ describe('createFluxEsseContext', () => {
             });
         });
         test('invalid context', () => {
-            expect(() => {
-                const { result } = renderHook(() => {
-                    try {
-                        return {
-                            success: useFluxEsseContext({
-                                Provider: () => null,
-                                displayName: '',
-                            }),
-                        };
-                    } catch (ex) {
-                        return { failure: ex };
-                    }
-                });
-                if ('failure' in result.current) {
-                    throw result.current.failure;
-                }
-            }).toThrow(
-                /^Specify the context created by createFluxEsseContext$/,
-            );
+            expect(() =>
+                renderHookWithError(() =>
+                    useFluxEsseContext({
+                        Provider: () => null,
+                        displayName: '',
+                    }),
+                ),
+            ).toThrow(/^Specify the context created by createFluxEsseContext$/);
         });
         test('outbound', () => {
             const TestContext = createFluxEsseContext({ a() {} });
-            expect(() => {
-                const { result } = renderHook(() => {
-                    try {
-                        return { success: useFluxEsseContext(TestContext) };
-                    } catch (ex) {
-                        return { failure: ex };
-                    }
-                });
-                if ('failure' in result.current) {
-                    throw result.current.failure;
-                }
-            }).toThrow(
+            expect(() =>
+                renderHookWithError(() => useFluxEsseContext(TestContext)),
+            ).toThrow(
                 /^Use useFluxEsseContext inside FluxEsseContext\.Provider$/,
             );
         });
