@@ -98,13 +98,13 @@ export function createFluxEsseContext<Store extends object>(
 
 function createProvider<Store extends object>(
     storeSpec: Store | (new () => Store),
-    original: OriginalContext<Store>,
+    { Provider: original }: OriginalContext<Store>,
 ): Provider<Store> {
     return function Provider({ initialize, ...props }) {
         const value = useStoreAndActions<Store>(storeSpec);
         // eslint-disable-next-line react-hooks/exhaustive-deps -- 初回だけ実行する
         useEffect(() => initialize?.(value[1]), []);
-        return createElement(original.Provider, { value, ...props });
+        return createElement(original, { value, ...props });
     };
 }
 
