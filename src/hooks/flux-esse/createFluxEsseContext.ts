@@ -79,10 +79,7 @@ export function createFluxEsseContext<Store extends object>(
         undefined,
     );
     original.displayName = 'FluxEsseContext';
-    const Provider: Provider<Store> = (props) => {
-        const value = useStoreAndActions<Store>(storeSpec);
-        return createElement(original.Provider, { value, ...props });
-    };
+    const Provider = createProvider(storeSpec, original);
     const context = {
         get Provider() {
             return Provider;
@@ -96,6 +93,16 @@ export function createFluxEsseContext<Store extends object>(
     };
     contextMap.set(context, original);
     return context;
+}
+
+function createProvider<Store extends object>(
+    storeSpec: Store | (new () => Store),
+    original: OriginalContext<Store>,
+): Provider<Store> {
+    return function Provider(props) {
+        const value = useStoreAndActions<Store>(storeSpec);
+        return createElement(original.Provider, { value, ...props });
+    };
 }
 
 /**
