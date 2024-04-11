@@ -26,10 +26,22 @@ type Provider<Store extends object> = (
 ) => ReactNode;
 
 interface FluxEsseContext<Store extends object> {
-    readonly original: OriginalContext<Store>;
     readonly Provider: Provider<Store>;
     displayName: string;
 }
+
+interface ContextMap
+    extends WeakMap<FluxEsseContext<object>, OriginalContext<object>> {
+    get<Store extends object>(
+        context: FluxEsseContext<Store>,
+    ): OriginalContext<Store> | undefined;
+    set<Store extends object>(
+        context: FluxEsseContext<Store>,
+        original: OriginalContext<Store>,
+    ): this;
+}
+
+const contextMap = new WeakMap() as ContextMap;
 
 /**
  * StoreとActionを扱うコンテキストを生成します。
@@ -71,10 +83,7 @@ export function createFluxEsseContext<Store extends object>(
         const value = useStoreAndActions<Store>(storeSpec);
         return createElement(original.Provider, { value, ...props });
     };
-    return {
-        get original() {
-            return original;
-        },
+    const context = {
         get Provider() {
             return Provider;
         },
@@ -85,6 +94,8 @@ export function createFluxEsseContext<Store extends object>(
             original.displayName = value;
         },
     };
+    contextMap.set(context, original);
+    return context;
 }
 
 /**
@@ -95,8 +106,11 @@ export function createFluxEsseContext<Store extends object>(
 export function useFluxEsseContext<Store extends object>(
     context: FluxEsseContext<Store>,
 ): StoreAndActions<Store> {
+    const original =
+        contextMap.get(context) ??
+        error`Specify the context created by createFluxEsseContext`;
     return (
-        useContext(context.original) ??
-        error`Use useContext inside ${context.original.displayName}.Provider`
+        useContext(original) ??
+        error`Use useFluxEsseContext inside ${context.displayName}.Provider`
     );
 }

@@ -83,6 +83,27 @@ describe('createFluxEsseContext', () => {
                 mock.mockRestore();
             }
         });
+        test('invalid context', () => {
+            expect(() => {
+                const { result } = renderHook(() => {
+                    try {
+                        return {
+                            success: useFluxEsseContext({
+                                Provider: () => null,
+                                displayName: '',
+                            }),
+                        };
+                    } catch (ex) {
+                        return { failure: ex };
+                    }
+                });
+                if ('failure' in result.current) {
+                    throw result.current.failure;
+                }
+            }).toThrow(
+                /^Specify the context created by createFluxEsseContext$/,
+            );
+        });
         test('outbound', () => {
             const TestContext = createFluxEsseContext({ a() {} });
             expect(() => {
@@ -96,7 +117,9 @@ describe('createFluxEsseContext', () => {
                 if ('failure' in result.current) {
                     throw result.current.failure;
                 }
-            }).toThrow(/^Use useContext inside FluxEsseContext\.Provider$/);
+            }).toThrow(
+                /^Use useFluxEsseContext inside FluxEsseContext\.Provider$/,
+            );
         });
     });
 });
