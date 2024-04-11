@@ -23,7 +23,8 @@ type ReducibleTypes<Store extends object> = keyof {
             : never
         : never]: 0;
 };
-type Actions<Store extends object> = Readonly<
+/** Storeで処理されるActionを発行するメソッド群 */
+export type Actions<Store extends object> = Readonly<
     Pick<Store, ReducibleTypes<Store>>
 >;
 type ImmutableStore<Store extends object> = Immutable<

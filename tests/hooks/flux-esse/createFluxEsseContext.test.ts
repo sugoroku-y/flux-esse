@@ -45,6 +45,20 @@ describe('createFluxEsseContext', () => {
         TestContext.displayName = undefined;
         expect(TestContext.displayName).toBe('');
     });
+    test('initialize', () => {
+        const termination = jest.fn();
+        const initialize = jest.fn().mockReturnValue(termination);
+        const TestContext = createFluxEsseContext({ a() {} });
+        const { unmount } = render(
+            createElement(TestContext.Provider, { initialize }),
+        );
+        expect(initialize).toHaveBeenCalledTimes(1);
+        expect(termination).not.toHaveBeenCalled();
+        initialize.mockReset();
+        unmount();
+        expect(initialize).not.toHaveBeenCalled();
+        expect(termination).toHaveBeenCalledTimes(1);
+    });
     describe('error', () => {
         test('no handler', () => {
             const mock = jest

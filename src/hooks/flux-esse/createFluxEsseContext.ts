@@ -5,9 +5,11 @@ import {
     createContext,
     createElement,
     useContext,
+    useEffect,
 } from 'react';
 import { error } from '../../utils/error';
 import {
+    type Actions,
     type StoreAndActions,
     type Validation,
     useStoreAndActions,
@@ -17,10 +19,9 @@ type OriginalContext<Store extends object> = Context<
     StoreAndActions<Store> | undefined
 >;
 
-type ProviderProps<Store extends object> = Omit<
-    ComponentProps<OriginalContext<Store>['Provider']>,
-    'value'
->;
+type ProviderProps<Store extends object> = {
+    initialize?: (actions: Actions<Store>) => void;
+} & Omit<ComponentProps<OriginalContext<Store>['Provider']>, 'value'>;
 type Provider<Store extends object> = (
     props: ProviderProps<Store>,
 ) => ReactNode;
@@ -99,8 +100,10 @@ function createProvider<Store extends object>(
     storeSpec: Store | (new () => Store),
     original: OriginalContext<Store>,
 ): Provider<Store> {
-    return function Provider(props) {
+    return function Provider({ initialize, ...props }) {
         const value = useStoreAndActions<Store>(storeSpec);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- 初回だけ実行する
+        useEffect(() => initialize?.(value[1]), []);
         return createElement(original.Provider, { value, ...props });
     };
 }
