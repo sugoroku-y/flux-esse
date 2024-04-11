@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { act, render } from '@testing-library/react';
 import { createFluxEsseContext, useFluxEsseContext } from '@';
 import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
-import { toThrowWithinReactComponent } from '@tests/testing-library/toThrowWithinReactComponent';
+import { toOutputConsoleError } from './toOutputConsoleError';
 
 describe('createFluxEsseContext', () => {
     test('object literal', () => {
@@ -63,15 +63,30 @@ describe('createFluxEsseContext', () => {
     });
     describe('error', () => {
         test('no handler', () => {
-            toThrowWithinReactComponent({
-                prepare: () =>
-                    createFluxEsseContext({} as Record<string, () => void>),
-                target: (TestContext) => {
-                    render(createElement(TestContext.Provider));
-                },
-                message: 'The store must have one or more action handler.',
-                componentName: 'Provider',
+            const exception = new Error(
+                'The store must have one or more action handler.',
+            );
+            const unhandledException = expect.objectContaining({
+                type: 'unhandled exception',
+                detail: exception,
             });
+            toOutputConsoleError(
+                () => {
+                    const TestContext = createFluxEsseContext(
+                        {} as Record<string, () => void>,
+                    );
+                    expect(() =>
+                        render(createElement(TestContext.Provider)),
+                    ).toThrow(exception);
+                },
+                [unhandledException],
+                [unhandledException],
+                [
+                    expect.stringMatching(
+                        /^The above error occurred in the <Provider> component:/,
+                    ),
+                ],
+            );
         });
         test('invalid context', () => {
             expect(() =>

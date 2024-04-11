@@ -1,7 +1,7 @@
 import { act } from '@testing-library/react';
 import { useStoreAndActions } from '@';
 import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
-import { toThrowWithinReactComponent } from '@tests/testing-library/toThrowWithinReactComponent';
+import { toOutputConsoleError } from './toOutputConsoleError';
 
 describe('flux-esse', () => {
     describe('useStoreAndActions', () => {
@@ -51,44 +51,40 @@ describe('flux-esse', () => {
             );
         });
         test('invalid handler call', () => {
-            toThrowWithinReactComponent({
-                prepare: () =>
-                    renderHookWithError(() =>
-                        useStoreAndActions({
-                            destructure({ _ }: { _: string }) {},
-                        }),
-                    ),
-                target: ({ result }) => {
-                    act(() => {
-                        // @ts-expect-error 引数が必須のメソッドを無理やり引数無しで呼び出す
-                        result.current[1].destructure();
-                    });
-                },
-                message:
+            toOutputConsoleError(() => {
+                const { result } = renderHookWithError(() =>
+                    useStoreAndActions({
+                        destructure({ _ }: { _: string }) {},
+                    }),
+                );
+                act(() => {
+                    // @ts-expect-error destructureを引数無しで呼び出す
+                    result.current[1].destructure();
+                });
+            }, [
+                'unhandled exception',
+                new Error(
                     "Cannot destructure property '_' of 'undefined' as it is undefined.",
-                componentName: 'TestComponent',
-            });
+                ),
+            ]);
         });
         test('handler disappearance', () => {
-            toThrowWithinReactComponent({
-                prepare: () => {
-                    const { result } = renderHookWithError(() =>
-                        useStoreAndActions({
-                            disappear() {
-                                // @ts-expect-error 無理やりハンドラーを削除
-                                delete this.disappear;
-                            },
-                        }),
-                    );
-                    act(() => result.current[1].disappear());
-                    return { result };
-                },
-                target: ({ result }) => {
-                    act(() => result.current[1].disappear());
-                },
-                message: 'draft[type] is not a function',
-                componentName: 'TestComponent',
-            });
+            toOutputConsoleError(() => {
+                const { result } = renderHookWithError(() =>
+                    useStoreAndActions({
+                        disappear() {
+                            // @ts-expect-error 無理やりハンドラーを削除
+                            delete this.disappear;
+                        },
+                    }),
+                );
+                act(() => result.current[1].disappear());
+                expect(console.error).not.toHaveBeenCalled();
+                act(() => result.current[1].disappear());
+            }, [
+                'unhandled exception',
+                new Error('draft[type] is not a function'),
+            ]);
         });
         test.skip('compile test', () => {
             expect(

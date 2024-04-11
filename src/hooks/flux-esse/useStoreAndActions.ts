@@ -118,7 +118,11 @@ export function useStoreAndActions<Store extends object>(
 
 const reducer: <Store>(previous: Store, action: ActionPayload) => Store =
     produce((draft, { type, payload }) => {
-        (draft as HandlerMap)[type](...payload);
+        try {
+            (draft as HandlerMap)[type](...payload);
+        } catch (ex) {
+            console.error('unhandled exception', ex);
+        }
     });
 
 function initializer<Store extends object>(
