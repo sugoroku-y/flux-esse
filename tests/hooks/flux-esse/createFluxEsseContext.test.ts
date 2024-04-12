@@ -16,26 +16,30 @@ describe('createFluxEsseContext', () => {
             return createElement(
                 SampleContext.Provider,
                 {},
-                createElement(Component),
+                createElement(ViewComponent),
+                createElement(ChangeButton),
             );
         }
-        function Component() {
-            const [{ text }, { change }] = useFluxEsseContext(SampleContext);
+        function ViewComponent() {
+            const [{ text }] = useFluxEsseContext(SampleContext);
+            return createElement('div', { 'data-testid': 'Component' }, text);
+        }
+        function ChangeButton() {
+            const [, { change }] = useFluxEsseContext(SampleContext);
             return createElement(
-                'div',
+                'button',
                 {
-                    onClick() {
-                        change('test');
-                    },
-                    'data-testid': 'Component',
+                    onClick: () => change('test'),
+                    'data-testid': 'ChangeButton',
                 },
-                text,
+                'change',
             );
         }
         const { getByTestId } = render(createElement(Page));
         const component = getByTestId('Component');
+        const button = getByTestId('ChangeButton');
         expect(component.textContent).toBe('');
-        act(() => component.click());
+        act(() => button.click());
         expect(component.textContent).toBe('test');
     });
     test('displayName', () => {
