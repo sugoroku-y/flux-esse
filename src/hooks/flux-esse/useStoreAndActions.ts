@@ -8,17 +8,17 @@ interface ActionPayload {
     payload: unknown[];
 }
 
-type HandlerMap = Record<PropertyKey, (...payload: unknown[]) => void>;
+type Action = (...payload: ActionPayload['payload']) => void;
 
-type Action = (...payload: unknown[]) => void;
+type HandlerMap = Record<ActionPayload['type'], Action>;
 
 type ReducibleTypes<Store extends object> = keyof {
-    [Type in keyof Store as Store[Type] extends (
-        ...payload: infer Payload
-    ) => infer ReturnType
-        ? Payload extends unknown[]
-            ? ReturnType extends void
-                ? Type
+    [Type in keyof Store as Type extends ActionPayload['type']
+        ? Store[Type] extends (...payload: infer Payload) => infer ReturnType
+            ? Payload extends ActionPayload['payload']
+                ? ReturnType extends void
+                    ? Type
+                    : never
                 : never
             : never
         : never]: 0;
@@ -42,9 +42,9 @@ export type StoreAndActions<Store extends object> = readonly [
 /**
  * StoreがActionに応じて処理を行うメソッドを持たない場合に、neverにします。
  */
-export type Validation<Store extends object, T> = [ReducibleTypes<Store>] extends [
-    never,
-]
+export type Validation<Store extends object, T> = [
+    ReducibleTypes<Store>,
+] extends [never]
     ? never
     : T;
 
@@ -144,7 +144,7 @@ function initializer<Store extends object>(
 function* actionEntries<Store extends object>(
     store: Store,
     dispatch: Dispatch<ActionPayload>,
-): Generator<[PropertyKey, Action], void, undefined> {
+): Generator<[ActionPayload['type'], Action], void, undefined> {
     let valid;
     for (const type of getAllPropertyKeys(store)) {
         if (typeof store[type] === 'function') {
