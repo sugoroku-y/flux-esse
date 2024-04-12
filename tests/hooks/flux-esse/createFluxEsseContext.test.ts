@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { act, render } from '@testing-library/react';
 import { createFluxEsseContext, useFluxEsseContext } from '@';
 import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
-import { toOutputConsoleError } from './toOutputConsoleError';
+import '@tests/testing-library/toOutputToConsoleError';
 
 describe('createFluxEsseContext', () => {
     test('object literal', () => {
@@ -70,15 +70,14 @@ describe('createFluxEsseContext', () => {
                 type: 'unhandled exception',
                 detail: exception,
             });
-            toOutputConsoleError(
-                () => {
-                    const TestContext = createFluxEsseContext(
-                        {} as Record<string, () => void>,
-                    );
-                    expect(() =>
-                        render(createElement(TestContext.Provider)),
-                    ).toThrow(exception);
-                },
+            expect(() => {
+                const TestContext = createFluxEsseContext(
+                    {} as Record<string, () => void>,
+                );
+                expect(() =>
+                    render(createElement(TestContext.Provider)),
+                ).toThrow(exception);
+            }).toOutputToConsoleError(
                 [unhandledException],
                 [unhandledException],
                 [

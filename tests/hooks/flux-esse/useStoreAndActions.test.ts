@@ -1,7 +1,7 @@
 import { act } from '@testing-library/react';
 import { useStoreAndActions } from '@';
 import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
-import { toOutputConsoleError } from './toOutputConsoleError';
+import '@tests/testing-library/toOutputToConsoleError';
 
 describe('flux-esse', () => {
     describe('useStoreAndActions', () => {
@@ -51,17 +51,17 @@ describe('flux-esse', () => {
             );
         });
         test('invalid handler call', () => {
-            toOutputConsoleError(() => {
-                const { result } = renderHookWithError(() =>
-                    useStoreAndActions({
-                        destructure({ _ }: { _: string }) {},
-                    }),
-                );
+            const { result } = renderHookWithError(() =>
+                useStoreAndActions({
+                    destructure({ _ }: { _: string }) {},
+                }),
+            );
+            expect(() => {
                 act(() => {
                     // @ts-expect-error destructureを引数無しで呼び出す
                     result.current[1].destructure();
                 });
-            }, [
+            }).toOutputToConsoleError([
                 'unhandled exception',
                 new Error(
                     "Cannot destructure property '_' of 'undefined' as it is undefined.",
@@ -69,19 +69,19 @@ describe('flux-esse', () => {
             ]);
         });
         test('handler disappearance', () => {
-            toOutputConsoleError(() => {
-                const { result } = renderHookWithError(() =>
-                    useStoreAndActions({
-                        disappear() {
-                            // @ts-expect-error 無理やりハンドラーを削除
-                            delete this.disappear;
-                        },
-                    }),
-                );
+            const { result } = renderHookWithError(() =>
+                useStoreAndActions({
+                    disappear() {
+                        // @ts-expect-error 無理やりハンドラーを削除
+                        delete this.disappear;
+                    },
+                }),
+            );
+            expect(() => {
                 act(() => result.current[1].disappear());
                 expect(console.error).not.toHaveBeenCalled();
                 act(() => result.current[1].disappear());
-            }, [
+            }).toOutputToConsoleError([
                 'unhandled exception',
                 new Error('draft[type] is not a function'),
             ]);
