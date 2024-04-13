@@ -23,16 +23,26 @@ type ReducibleTypes<Store extends object> = keyof {
             : never
         : never]: 0;
 };
-/** Storeで処理されるActionを発行するメソッド群 */
+
+/**
+ * Storeで処理されるActionを発行するメソッド群です。
+ *
+ * thisと関連付けられていないのでspread展開して利用できます。
+ */
 export type Actions<Store extends object> = Readonly<
     Pick<Store, ReducibleTypes<Store>>
->;
-type ImmutableStore<Store extends object> = Immutable<
+    >;
+/**
+ * Storeからハンドラーを取り除いた型です。
+ * 
+ * 参照専用で変更不可になっています。
+ */
+export type ImmutableStore<Store extends object> = Immutable<
     Omit<Store, ReducibleTypes<Store>>
 >;
 
 /**
- * useStoreAndActionsの返値となる型。
+ * useStoreAndActionsの返値となる型です。
  */
 export type StoreAndActions<Store extends object> = readonly [
     ImmutableStore<Store>,
@@ -40,7 +50,7 @@ export type StoreAndActions<Store extends object> = readonly [
 ];
 
 /**
- * StoreがActionに応じて処理を行うメソッドを持たない場合に、neverにします。
+ * Storeがハンドラーを持たない場合に、neverにします。
  */
 export type Validation<Store extends object, T> = [
     ReducibleTypes<Store>,
@@ -49,55 +59,73 @@ export type Validation<Store extends object, T> = [
     : T;
 
 /**
- * シンプルなFLUXアーキテクチャを実現するカスタムフックです。
- * @param StoreClass 初期状態のStoreのプロパティと受け取ったActionに応じて処理を行うメソッドを持つクラスです。
+ * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
+ * @param StoreClass 初期状態のStoreのプロパティとActionを処理するハンドラーを持つクラスです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
  *
- * ただし、StoreからはActionに応じて処理を行うメソッドが除外されています。
+ * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
  * @example
- * const [store, {change}] = useStoreAndActions({
+ * const [store, {change}] = useStoreAndActions(class {
+ *     text = '';
+ *     change(newText: string) {
+ *         this.text = newText;
+ *     }
+ * });
+ * @remark StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+ * StoreやActionが利用できなくなります。
+ * @throws 以下の場合に例外を投げます。
+ * - StoreClassとして1つもハンドラーを持たないクラスが指定された場合。
  */
 export function useStoreAndActions<Store extends object>(
     StoreClass: new () => Store,
 ): Validation<Store, StoreAndActions<Store>>;
 /**
- * シンプルなFLUXアーキテクチャを実現するカスタムフックです。
- * @param storeSpec 初期状態のStoreのプロパティと受け取ったActionに応じて処理を行うメソッドを持つオブジェクトです。
- *
- * このカスタムフックを呼び出したあと変更不可になるので注意してください。
+ * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
+ * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクトです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
  *
- * ただし、StoreからはActionに応じて処理を行うメソッドが除外されています。
+ * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
  * @example
  * const [store, {change}] = useStoreAndActions({
+ *     text: '',
+ *     change(newText: string) {
+ *         this.text = newText;
+ *     },
+ * });
+ * @remark このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。
+ * @remark initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+ * StoreやActionが利用できなくなります。
+ * @throws 以下の場合に例外を投げます。
+ * - initialStoreとして1つもハンドラーを持たないオブジェクトが指定された場合。
  */
 export function useStoreAndActions<Store extends object>(
-    storeSpec: Store,
+    initialStore: Store,
 ): Validation<Store, StoreAndActions<Store>>;
 /**
- * シンプルなFLUXアーキテクチャを実現するカスタムフックです。
- * @param storeSpec 初期状態のStoreのプロパティと受け取ったActionに応じて処理を行うメソッドを持つオブジェクト、もしくはクラスです。
- *
- * オブジェクトを指定した場合は、このカスタムフックを呼び出したあと変更不可になるので注意してください。
+ * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
+ * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
- *
- * ただし、StoreからはActionに応じて処理を行うメソッドが除外されています。
- *
- * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
+ * @remark 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
  * @example
- * const [store, {change}] = useStoreAndActions({
+ * function useSomthing<Store extends object>(
+ *     storeSpec: Store | (new () => Store),
+ * ) {
+ *    const [store, actions] = useStoreAndActions<Store>(storeSpec);
+ *     // ...
+ * }
  */
 export function useStoreAndActions<Store extends object>(
     storeSpec: Store | (new () => Store),
 ): Validation<Store, StoreAndActions<Store>>;
 /**
- * useStoreAndActionsの実装
- * @param storeSpec 初期状態のStoreのプロパティと受け取ったActionに応じて処理を行うメソッドを持つオブジェクト、もしくはクラスです。
+ * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
+ * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
+ * @remark useStoreAndActionsの実装
  */
 export function useStoreAndActions<Store extends object>(
     storeSpec: Store | (new () => Store),
