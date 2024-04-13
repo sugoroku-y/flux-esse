@@ -1,7 +1,7 @@
 {
-  "name": "custom-hook-template",
+  "name": "flux-esse",
   "version": "0.0.1",
-  "description": "Custom hooks template",
+  "description": "This package provides custom hooks that realize the essence of the FLUX architecture.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
