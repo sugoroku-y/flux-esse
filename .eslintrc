@@ -58,10 +58,7 @@
         "jsdoc/check-tag-names": [
             "error",
             {
-                "definedTags": [
-                    "typeParam",
-                    "remark"
-                ]
+                "definedTags": ["hidden", "typeParam", "remark"]
             }
         ],
         "eslint-comments/no-use": [

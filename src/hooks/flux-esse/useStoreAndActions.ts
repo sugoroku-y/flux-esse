@@ -109,6 +109,7 @@ export function useStoreAndActions<Store extends object>(
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
  * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
+ * @hidden
  * @remark 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
  * @example
  * function useSomthing<Store extends object>(

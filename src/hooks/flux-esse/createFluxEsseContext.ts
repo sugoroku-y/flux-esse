@@ -126,6 +126,7 @@ export function createFluxEsseContext<Store extends object>(
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
  * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @returns StoreとActionを扱うコンテキスト
+ * @hidden
  * @remark 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
  * @example
  * function useSomthing<Store extends object>(
