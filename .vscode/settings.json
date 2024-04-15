@@ -7,5 +7,6 @@
     "files.autoSaveWhenNoErrors": true,
     "files.encoding": "utf8",
     "files.eol": "\n",
+    "markdownlint.ignore": ["LICENSE"],
     "typescript.tsdk": "node_modules/typescript/lib"
 }
