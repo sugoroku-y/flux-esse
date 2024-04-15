@@ -76,6 +76,7 @@ export type Validation<Store extends object, T> = [
  * @remark StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
  * StoreやActionが利用できなくなります。
  * @throws 以下の場合に例外を投げます。
+ * 
  * - StoreClassとして1つもハンドラーを持たないクラスが指定された場合。
  */
 export function useStoreAndActions<Store extends object>(
@@ -100,6 +101,7 @@ export function useStoreAndActions<Store extends object>(
  * @remark initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
  * StoreやActionが利用できなくなります。
  * @throws 以下の場合に例外を投げます。
+ * 
  * - initialStoreとして1つもハンドラーを持たないオブジェクトが指定された場合。
  */
 export function useStoreAndActions<Store extends object>(

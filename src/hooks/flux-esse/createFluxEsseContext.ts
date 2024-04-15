@@ -193,6 +193,7 @@ function createProvider<Store extends object>(
  * @example
  * const [store, {change}] = useFluxEsseContext(SampleContext);
  * @throws 以下の場合に例外を投げます。
+ * 
  * - {@link createFluxEsseContext}で生成されていないコンテキストを指定した場合。
  * - FluxEsseContext.Providerの中ではない場所で使用された場合。
  */
