@@ -134,4 +134,4 @@ function DecrementButton() {
 
 ## ライセンス
 
-このプロジェクトは MIT ライセンスのもとで公開されています。詳細については、[LICENSE](LICENSE) を参照してください。
+このプロジェクトはMITライセンスのもとで公開されています。詳細については、[LICENSE](LICENSE) を参照してください。
