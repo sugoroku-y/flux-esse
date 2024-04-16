@@ -65,7 +65,7 @@ export interface FluxEsseContext<Store extends object> {
 
 /**
  * WeakMapをFluxEsseContextとReactのContextを関連付けるマップ専用にしたものです。
- * 
+ *
  * 引数で指定したcontextが使用するStoreと対応するOriginalContext<Store>を取得・設定します。
  * @interface ContextMap
  */
@@ -82,15 +82,18 @@ interface ContextMap
 
 /**
  * FluxEsseContextとReactのContextを関連付けるマップ。
- * 
+ *
  * 不要になったあとにガーベージコレクトされるようにWeakMapを使用する。
  */
 const contextMap = new WeakMap() as ContextMap;
 
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
- * @param StoreClass 初期状態のStoreのプロパティとActionを処理するハンドラーを持つクラスです。
+ * @param StoreClass 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
  * @returns StoreとActionを扱うコンテキスト
+ *
+ * StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+ * コンテキストとして利用できなくなります。
  * @example
  * const SampleContext = createFluxEsseContext(class {
  *     text = '';
@@ -98,16 +101,19 @@ const contextMap = new WeakMap() as ContextMap;
  *         this.text = newText;
  *     }
  * });
- * @remark StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
- * コンテキストとして利用できなくなります。
  */
 export function createFluxEsseContext<Store extends object>(
     StoreClass: new () => Store,
 ): Validation<Store, FluxEsseContext<Store>>;
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
- * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクトです。
+ *
+ * [^3]: 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
+ * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3]
  * @returns StoreとActionを扱うコンテキスト
+ *
+ * initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+ * コンテキストとして利用できなくなります。
  * @example
  * const SampleContext = createFluxEsseContext({
  *     text: '',
@@ -115,9 +121,6 @@ export function createFluxEsseContext<Store extends object>(
  *         this.text = newText;
  *     },
  * });
- * @remark 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
- * @remark initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
- * コンテキストとして利用できなくなります。
  */
 export function createFluxEsseContext<Store extends object>(
     initialStore: Store,
@@ -193,7 +196,7 @@ function createProvider<Store extends object>(
  * @example
  * const [store, {change}] = useFluxEsseContext(SampleContext);
  * @throws 以下の場合に例外を投げます。
- * 
+ *
  * - {@link createFluxEsseContext}で生成されていないコンテキストを指定した場合。
  * - FluxEsseContext.Providerの中ではない場所で使用された場合。
  */

@@ -16,6 +16,8 @@
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
+[^1]: publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
+
 #### Type parameters
 
 | Name | Type |
@@ -26,7 +28,7 @@ FLUXアーキテクチャーのエッセンスを実現するカスタムフッ�
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラーを持つクラスです。 |
+| `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。 |
 
 #### Returns
 
@@ -37,6 +39,9 @@ StoreとActionを発行するメソッドを持つオブジェクトを返しま
 ただし、Storeからはハンドラーが除外されています。
 
 Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
+
+StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+StoreやActionが利用できなくなります。
 
 **`Example`**
 
@@ -49,11 +54,6 @@ const [store, {change}] = useStoreAndActions(class {
 });
 ```
 
-**`Remark`**
-
-StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
-StoreやActionが利用できなくなります。
-
 **`Throws`**
 
 以下の場合に例外を投げます。
@@ -63,6 +63,8 @@ StoreやActionが利用できなくなります。
 ▸ **useStoreAndActions**\<`Store`\>(`initialStore`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
+
+[^2]: このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。
 
 #### Type parameters
 
@@ -74,7 +76,7 @@ FLUXアーキテクチャーのエッセンスを実現するカスタムフッ�
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクトです。 |
+| `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^2] |
 
 #### Returns
 
@@ -86,6 +88,9 @@ StoreとActionを発行するメソッドを持つオブジェクトを返しま
 
 Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
 
+initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+StoreやActionが利用できなくなります。
+
 **`Example`**
 
 ```ts
@@ -96,15 +101,6 @@ const [store, {change}] = useStoreAndActions({
     },
 });
 ```
-
-**`Remark`**
-
-このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。
-
-**`Remark`**
-
-initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
-StoreやActionが利用できなくなります。
 
 **`Throws`**
 
@@ -130,13 +126,16 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラーを持つクラスです。 |
+| `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。 |
 
 #### Returns
 
 `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 StoreとActionを扱うコンテキスト
+
+StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+コンテキストとして利用できなくなります。
 
 **`Example`**
 
@@ -149,14 +148,11 @@ const SampleContext = createFluxEsseContext(class {
 });
 ```
 
-**`Remark`**
-
-StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
-コンテキストとして利用できなくなります。
-
 ▸ **createFluxEsseContext**\<`Store`\>(`initialStore`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 [useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
+
+[^3]: 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
 
 #### Type parameters
 
@@ -168,13 +164,16 @@ StoreClassとして1つもハンドラーを持たないクラスを指定する
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクトです。 |
+| `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3] |
 
 #### Returns
 
 `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 StoreとActionを扱うコンテキスト
+
+initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+コンテキストとして利用できなくなります。
 
 **`Example`**
 
@@ -186,15 +185,6 @@ const SampleContext = createFluxEsseContext({
     },
 });
 ```
-
-**`Remark`**
-
-返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
-
-**`Remark`**
-
-initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
-コンテキストとして利用できなくなります。
 
 ___
 

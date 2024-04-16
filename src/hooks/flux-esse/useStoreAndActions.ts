@@ -31,10 +31,10 @@ type ReducibleTypes<Store extends object> = keyof {
  */
 export type Actions<Store extends object> = Readonly<
     Pick<Store, ReducibleTypes<Store>>
-    >;
+>;
 /**
  * Storeからハンドラーを取り除いた型です。
- * 
+ *
  * 参照専用で変更不可になっています。
  */
 export type ImmutableStore<Store extends object> = Immutable<
@@ -60,12 +60,17 @@ export type Validation<Store extends object, T> = [
 
 /**
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
- * @param StoreClass 初期状態のStoreのプロパティとActionを処理するハンドラーを持つクラスです。
+ *
+ * [^1]: publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
+ * @param StoreClass 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
  *
  * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
+ * 
+ * StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+ * StoreやActionが利用できなくなります。
  * @example
  * const [store, {change}] = useStoreAndActions(class {
  *     text = '';
@@ -73,10 +78,8 @@ export type Validation<Store extends object, T> = [
  *         this.text = newText;
  *     }
  * });
- * @remark StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
- * StoreやActionが利用できなくなります。
  * @throws 以下の場合に例外を投げます。
- * 
+ *
  * - StoreClassとして1つもハンドラーを持たないクラスが指定された場合。
  */
 export function useStoreAndActions<Store extends object>(
@@ -84,12 +87,17 @@ export function useStoreAndActions<Store extends object>(
 ): Validation<Store, StoreAndActions<Store>>;
 /**
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
- * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクトです。
+ *
+ * [^2]: このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。
+ * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^2]
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
  *
  * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
+ * 
+ * initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+ * StoreやActionが利用できなくなります。
  * @example
  * const [store, {change}] = useStoreAndActions({
  *     text: '',
@@ -97,11 +105,8 @@ export function useStoreAndActions<Store extends object>(
  *         this.text = newText;
  *     },
  * });
- * @remark このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。
- * @remark initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
- * StoreやActionが利用できなくなります。
  * @throws 以下の場合に例外を投げます。
- * 
+ *
  * - initialStoreとして1つもハンドラーを持たないオブジェクトが指定された場合。
  */
 export function useStoreAndActions<Store extends object>(
