@@ -2,7 +2,6 @@ import { createElement, useEffect } from 'react';
 import { act, render } from '@testing-library/react';
 import { createFluxEsseContext, useFluxEsseContext } from '@';
 import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
-import '@tests/testing-library/toOutputToConsoleError';
 
 describe('createFluxEsseContext', () => {
     test('object literal', () => {
