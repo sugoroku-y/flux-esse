@@ -62,7 +62,7 @@ describe('flux-esse', () => {
                     result.current[1].destructure();
                 });
             }).toOutputToConsoleError([
-                'unhandled exception',
+                'unhandled exception in Action(type: destructure)',
                 new Error(
                     "Cannot destructure property '_' of 'undefined' as it is undefined.",
                 ),
@@ -79,12 +79,34 @@ describe('flux-esse', () => {
             );
             expect(() => {
                 act(() => result.current[1].disappear());
+                // 1回目のAction発行はエラーが発生しない
                 expect(console.error).not.toHaveBeenCalled();
                 act(() => result.current[1].disappear());
             }).toOutputToConsoleError([
-                'unhandled exception',
+                'unhandled exception in Action(type: disappear)',
                 new Error('draft[type] is not a function'),
             ]);
+        });
+        test('exception occurs in modification', () => {
+            const { result } = renderHookWithError(() =>
+                useStoreAndActions({
+                    array: new Array<number>(),
+                    action() {
+                        this.array.push(1);
+                        this.array.push(2);
+                        if (this.array.length > 1) {
+                            // 途中で例外を発生させる
+                            throw new Error();
+                        }
+                        this.array.push(3);
+                    },
+                }),
+            );
+            // 初期状態
+            expect(result.current[0].array).toEqual([]);
+            act(() => result.current[1].action());
+            // 例外が発生するまでの変更が反映されている
+            expect(result.current[0].array).toEqual([1, 2]);
         });
         test.skip('compile test', () => {
             expect(

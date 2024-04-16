@@ -152,14 +152,25 @@ export function useStoreAndActions<Store extends object>(
     return [store, actions as Actions<Store>];
 }
 
-const reducer: <Store>(previous: Store, action: ActionPayload) => Store =
-    produce((draft, { type, payload }) => {
+function reducer<Store>(
+    previous: Store,
+    { type, payload }: ActionPayload,
+): Store {
+    // 第2引数に指定した関数内でdraftに行われた変更をpreviousにマージした新しいStoreを返値とする
+    return produce(previous, (draft: HandlerMap) => {
         try {
-            (draft as HandlerMap)[type](...payload);
+            // typeはStoreが持つpublicで返値がvoid型のインスタンスメソッドのキーであり、payloadはその引数なので、問題なく呼び出せるはず
+            draft[type](...payload);
         } catch (ex) {
-            console.error('unhandled exception', ex);
+            // メソッド呼び出しは問題なくおこなわれ、内部でも例外は発生しないはず
+            // 万が一エラーが発生した場合でも、コンソールに出力するだけにして握りつぶす。
+            console.error(
+                `unhandled exception in Action(type: ${String(type)})`,
+                ex,
+            );
         }
     });
+}
 
 function initializer<Store extends object>(
     storeSpec: Store | (new () => Store),
