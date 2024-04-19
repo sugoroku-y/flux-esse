@@ -9,7 +9,7 @@
     "test": "jest",
     "prebuild": "npm test --lint",
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "react"
