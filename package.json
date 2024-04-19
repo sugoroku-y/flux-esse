@@ -7,7 +7,7 @@
   "scripts": {
     "docs": "typedoc",
     "test": "jest",
-    "prebuild": "npm test",
+    "prebuild": "npm test --lint",
     "build": "tsc",
     "prepare": "npm run build"
   },
