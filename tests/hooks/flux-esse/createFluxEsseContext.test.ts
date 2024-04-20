@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement, useEffect } from 'react';
 import { act, render } from '@testing-library/react';
 import { createFluxEsseContext, useFluxEsseContext } from '@';
 import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
@@ -51,13 +51,90 @@ describe('createFluxEsseContext', () => {
         TestContext.displayName = undefined;
         expect(TestContext.displayName).toBe('');
     });
+    test('hooks', async () => {
+        const TestContext = createFluxEsseContext(
+            {
+                a() {
+                    this.b += 1;
+                },
+                b: 0,
+                c(x: string) {
+                    this.d = `${this.b}${x}`;
+                },
+                d: '',
+            },
+            ({ b }, { c }) => {
+                // 初回とbが変化したとき、イベントループ1回分待ってからcを発行
+                useEffect(() => {
+                    (async () => {
+                        await Promise.resolve();
+                        c('x');
+                    })();
+                }, [b, c]);
+            },
+        );
+        function A() {
+            // return (
+            //     <TestContext.Provider>
+            //         <B />
+            //         <C />
+            //     </TestContext.Provider>
+            // );
+            return createElement(
+                TestContext.Provider,
+                {},
+                createElement(B),
+                createElement(C),
+            );
+        }
+        function B() {
+            const [, { a }] = useFluxEsseContext(TestContext);
+            // return <button data-testid="button" onClick={a}>click</button>;
+            return createElement(
+                'button',
+                {
+                    'data-testid': 'button',
+                    onClick: a,
+                },
+                'click',
+            );
+        }
+        function C() {
+            const [{ d }] = useFluxEsseContext(TestContext);
+            // return <div data-testid="view">{d}</div>;
+            return createElement(
+                'div',
+                {
+                    'data-testid': 'view',
+                },
+                d,
+            );
+        }
+        const { getByTestId } = render(createElement(A));
+        const button = getByTestId('button');
+        const view = getByTestId('view');
+        expect(button).toBeInstanceOf(HTMLButtonElement);
+        expect(view).toBeInstanceOf(HTMLDivElement);
+        expect(view.textContent).toBe('');
+        await act(() => Promise.resolve());
+        expect(view.textContent).toBe('0x');
+        act(() => button.click());
+        expect(view.textContent).toBe('0x');
+        await act(() => Promise.resolve());
+        expect(view.textContent).toBe('1x');
+    });
     test('initialize', () => {
         const termination = jest.fn();
         const initialize = jest.fn().mockReturnValue(termination);
-        const TestContext = createFluxEsseContext({ a() {} });
-        const { unmount } = render(
-            createElement(TestContext.Provider, { initialize }),
-        );
+        const TestContext = createFluxEsseContext({ a() {} }, () => {
+            useEffect(() => {
+                initialize();
+                return () => {
+                    termination();
+                };
+            }, []);
+        });
+        const { unmount } = render(createElement(TestContext.Provider));
         expect(initialize).toHaveBeenCalledTimes(1);
         expect(termination).not.toHaveBeenCalled();
         initialize.mockReset();
