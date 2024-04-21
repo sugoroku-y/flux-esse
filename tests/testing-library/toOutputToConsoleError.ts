@@ -1,83 +1,71 @@
+import { indented } from './indented';
+import { isPromiseLike } from './isPromiseLike';
+
 function toOutputToConsoleError(
     this: jest.MatcherContext,
-    received: () => unknown,
+    received: PromiseLike<unknown> | (() => unknown),
     ...errors: unknown[][]
 ): jest.CustomMatcherResult | Promise<jest.CustomMatcherResult> {
     const { utils, isNot, promise } = this;
+    if (jest.isMockFunction(console.error)) {
+        throw new Error(
+            'already console.error mocked! Maybe the function `act` is not enclosed in {}?',
+        );
+    }
     const mock = jest.spyOn(console, 'error').mockImplementation(() => {});
     let awaiting;
     try {
-        const result = received();
-        if (result instanceof Promise) {
-            awaiting = true;
-            return (async () => {
-                try {
-                    await result;
-                    return test();
-                } finally {
-                    mock.mockRestore();
-                }
-            })();
+        const result = typeof received === 'function' ? received() : received;
+        if (!isPromiseLike(result)) {
+            return testConsoleError(this, mock, errors);
         }
-        return test();
+        awaiting = true;
+        return (async () => {
+            try {
+                await result;
+                return testConsoleError(this, mock, errors);
+            } finally {
+                mock.mockRestore();
+            }
+        })();
     } finally {
         if (!awaiting) {
             mock.mockRestore();
         }
     }
-    function test() {
-        try {
-            expect(console.error).toHaveBeenCalledTimes(errors.length);
-            for (let index = 1; index <= errors.length; index += 1) {
-                expect(console.error).toHaveBeenNthCalledWith(
-                    index,
-                    ...errors[index - 1],
-                );
-            }
-        } catch (ex) {
-            // テストに失敗したときのメッセージをそのままmessageで返す
-            return {
-                pass: false,
-                message() {
-                    return String(
-                        (typeof ex === 'object' &&
-                            ex &&
-                            'message' in ex &&
-                            ex.message) ||
-                            ex,
-                    );
-                },
-            };
-        }
-        if (!isNot) {
-            // notでなければテストに成功しているのでメッセージは不要
-            return {
-                pass: true,
-                message() {
-                    return '';
-                },
-            };
-        }
-        // スコープを抜けると破棄されているかもしれないのでここで文字列化しておく
-        const expected = utils.stringify(errors);
-        const received = utils.stringify(mock.mock.calls);
-        return {
-            pass: true,
-            message() {
-                return `
-                    ${utils.matcherHint(
-                        'toOutputToConsoleError',
-                        '() => {...}',
-                        '[[...], ...]',
-                        { isNot, promise },
-                    )}
+}
 
-                    Expected: not ${utils.EXPECTED_COLOR(expected)}
-                    Received:     ${utils.RECEIVED_COLOR(received)}
-                    `.replaceAll(/(?:^\n|(\n)) +/g, '$1');
-            },
-        };
-    }
+function testConsoleError(
+    { utils, isNot, expand, equals }: jest.MatcherContext,
+    {
+        mock: { calls: received },
+    }: jest.SpyInstance<void, Parameters<typeof console.error>>,
+    expected: unknown[][],
+) {
+    const pass = equals(expected, received);
+    return {
+        pass,
+        message() {
+            return indented`
+                ${utils.matcherHint(...['toOutputToConsoleError', , , { isNot }])}
+
+                ${
+                    pass
+                        ? indented`
+                            Expected: not ${utils.printExpected(expected)}
+                            Received:     ${utils.printReceived(received)}
+                            `
+                        : utils.printDiffOrStringify(
+                              expected,
+                              received,
+                              'Expected',
+                              'Received',
+                              expand !== false,
+                          )
+                }
+                `;
+        },
+    };
 }
 
 expect.extend({ toOutputToConsoleError });
@@ -87,11 +75,18 @@ declare global {
     namespace jest {
         interface Matchers<R, T> {
             toOutputToConsoleError(
-                ...errors: T extends () => void
+                ...errors: T extends PromiseLike<unknown>
                     ? unknown[][]
-                    : [] & { message: `expectには関数を指定してください` }
-            ): T extends (...a: never) => Promise<unknown> ? Promise<R> : R;
+                    : T extends () => void
+                      ? unknown[][]
+                      : [] & {
+                            message: `expectにはPromiseか関数を指定してください`;
+                        }
+            ): T extends PromiseLike<unknown>
+                ? Promise<R>
+                : T extends (...a: never) => Promise<unknown>
+                  ? Promise<R>
+                  : R;
         }
     }
 }
-export {};

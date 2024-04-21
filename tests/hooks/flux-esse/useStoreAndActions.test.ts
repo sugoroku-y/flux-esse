@@ -1,7 +1,6 @@
 import { act } from '@testing-library/react';
 import { useStoreAndActions } from '@';
 import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
-import '@tests/testing-library/toOutputToConsoleError';
 
 describe('flux-esse', () => {
     describe('useStoreAndActions', () => {
@@ -87,6 +86,49 @@ describe('flux-esse', () => {
                 new Error('draft[type] is not a function'),
             ]);
         });
+        test('async error action', async () => {
+            const { result } = renderHookWithError(() =>
+                useStoreAndActions({
+                    action(a: string) {
+                        if (a) {
+                            throw new Error('test');
+                        }
+                    },
+                }),
+            );
+
+            await expect(
+                act(async () => {
+                    await Promise.resolve();
+                    result.current[1].action('true');
+                }),
+            ).toOutputToConsoleError([
+                'unhandled exception in Action(type: action)',
+                new Error('test'),
+            ]);
+        });
+        test('sync error action', () => {
+            const { result } = renderHookWithError(() =>
+                useStoreAndActions({
+                    action(a: string) {
+                        if (a) {
+                            throw new Error('test');
+                        }
+                    },
+                }),
+            );
+
+            expect(() => {
+                act(() => {
+                    {
+                        result.current[1].action('true');
+                    }
+                });
+            }).toOutputToConsoleError([
+                'unhandled exception in Action(type: action)',
+                new Error('test'),
+            ]);
+        });
         test('exception occurs in modification', () => {
             const { result } = renderHookWithError(() =>
                 useStoreAndActions({
@@ -104,7 +146,13 @@ describe('flux-esse', () => {
             );
             // 初期状態
             expect(result.current[0].array).toEqual([]);
-            act(() => result.current[1].action());
+            // ハンドラ内での例外はconsole.errorに出力される
+            expect(() => {
+                act(() => result.current[1].action());
+            }).toOutputToConsoleError([
+                'unhandled exception in Action(type: action)',
+                new Error(),
+            ]);
             // 例外が発生するまでの変更が反映されている
             expect(result.current[0].array).toEqual([1, 2]);
         });

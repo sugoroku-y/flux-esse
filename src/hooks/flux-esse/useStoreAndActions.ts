@@ -1,6 +1,6 @@
 import { type Dispatch, useReducer, useMemo } from 'react';
 import { type Immutable, freeze, produce, isDraftable, immerable } from 'immer';
-import { assert } from '../../utils/assert';
+import { error } from '../../utils/error';
 import { getAllPropertyKeys } from '../../utils/getAllPropertyKeys';
 
 interface ActionPayload {
@@ -68,7 +68,7 @@ export type Validation<Store extends object, T> = [
  * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
- * 
+ *
  * StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
  * StoreやActionが利用できなくなります。
  * @example
@@ -95,7 +95,7 @@ export function useStoreAndActions<Store extends object>(
  * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
- * 
+ *
  * initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
  * StoreやActionが利用できなくなります。
  * @example
@@ -204,5 +204,5 @@ function* actionEntries<Store extends object>(
             valid = true;
         }
     }
-    assert(valid, 'The store must have one or more action handler.');
+    valid || error`The store must have one or more action handler.`;
 }
