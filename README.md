@@ -30,11 +30,11 @@ A2 -down-> D
 
 -->
 
-`useStoreAndActions`には、引数としてStoreの実装、初期値と各Actionに対するハンドラーとしてのメソッドを実装したクラス、もしくはオブジェクトリテラルを指定し、StoreとActionを取得します。
+[`useStoreAndActions`](api.md#usestoreandactions)には、引数としてStoreの実装、初期値と各Actionに対するハンドラーとしてのメソッドを実装したクラス、もしくはオブジェクトリテラルを指定し、StoreとActionを取得します。
 
-`createFluxEsseContext`も同様に、引数としてStoreを実装したクラス、もしくはオブジェクトリテラルを指定し、コンテキストを生成します。
+[`createFluxEsseContext`](api.md#createfluxessecontext)も同様に、引数としてStoreを実装したクラス、もしくはオブジェクトリテラルを指定し、コンテキストを生成します。
 
-生成したコンテキストからStoreとActionを取得するには`useFluxEsseContext`を使用します。
+生成したコンテキストからStoreとActionを取得するには[`useFluxEsseContext`](api.md#usefluxessecontext)を使用します。
 
 ## インストール
 
@@ -56,7 +56,7 @@ yarn add flux-esse
 
 ### 単体のコンポーネントで利用する場合
 
-1つのコンポーネントだけでFLUXアーキテクチャーを実現する場合は、`useStoreAndActions`を使います。
+1つのコンポーネントだけでFLUXアーキテクチャーを実現する場合は、[`useStoreAndActions`](api.md#usestoreandactions)を使います。
 
 ```tsx
 function Component() {
@@ -76,7 +76,7 @@ function Component() {
 
 ### 複数のコンポーネントから利用する場合
 
-複数のコンポーネントで1つのStoreを共有する場合はコンテキストを使う`createFluxEsseContext`/`useFluxEsseContext`を使います。
+複数のコンポーネントで1つのStoreを共有する場合はコンテキストを使う[`createFluxEsseContext`](api.md#createfluxessecontext)/[`useFluxEsseContext`](api.md#usefluxessecontext)を使います。
 
 ```tsx
 const SampleContext = createFluxEsseContext(class {
