@@ -15,13 +15,20 @@ describe('toOutputToConsoleError', () => {
         console.error(...expected[1]);
     };
     const expectedException = new Error('test');
-    const exception = () => {
-        if (typeof jest === 'object') {
-            Error.captureStackTrace(expectedException);
-            throw expectedException;
-        }
-        console.error(...expected[0]);
-    };
+    const exception =
+        ({ before, after }: { before?: boolean; after?: boolean } = {}) =>
+        () => {
+            if (before) {
+                console.error(...expected[0]);
+            }
+            if (typeof jest === 'object') {
+                Error.captureStackTrace(expectedException);
+                throw expectedException;
+            }
+            if (after) {
+                console.error(...expected[1]);
+            }
+        };
 
     const messages = {
         'only one time': indented`
@@ -154,24 +161,33 @@ describe('toOutputToConsoleError', () => {
                 },
             );
         });
-        test('exception', async () => {
-            const proc = exception;
-            if (type === 'sync') {
-                expect(() =>
-                    expect(proc).toOutputToConsoleError(expected),
-                ).toThrow(expectedException);
-            } else {
-                const x =
-                    type === 'async'
-                        ? async () => {
-                              await Promise.resolve();
-                              proc();
-                          }
-                        : Promise.resolve().then(proc);
-                await expect(
-                    expect(x).toOutputToConsoleError(expected),
-                ).rejects.toThrow(expectedException);
-            }
-        });
+        test.each`
+            before   | after
+            ${true}  | ${true}
+            ${true}  | ${false}
+            ${false} | ${true}
+            ${false} | ${false}
+        `(
+            'exception {before:$before,after:$after}',
+            async ({ before, after }: { before: boolean; after: boolean }) => {
+                const proc = exception({ before, after });
+                if (type === 'sync') {
+                    expect(() =>
+                        expect(proc).toOutputToConsoleError(expected),
+                    ).toThrow(expectedException);
+                } else {
+                    const asyncProc =
+                        type === 'async'
+                            ? async () => {
+                                  await Promise.resolve();
+                                  proc();
+                              }
+                            : Promise.resolve().then(proc);
+                    await expect(
+                        expect(asyncProc).toOutputToConsoleError(expected),
+                    ).rejects.toThrow(expectedException);
+                }
+            },
+        );
     });
 });
