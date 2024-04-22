@@ -6,7 +6,6 @@ function toOutputToConsoleError(
     received: PromiseLike<unknown> | (() => unknown),
     ...errors: unknown[][]
 ): jest.CustomMatcherResult | Promise<jest.CustomMatcherResult> {
-    const { utils, isNot, promise } = this;
     if (jest.isMockFunction(console.error)) {
         throw new Error(
             'already console.error mocked! Maybe the function `act` is not enclosed in {}?',
