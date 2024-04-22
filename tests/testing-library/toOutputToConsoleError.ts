@@ -83,7 +83,7 @@ declare global {
                         }
             ): T extends PromiseLike<unknown>
                 ? Promise<R>
-                : T extends (...a: never) => Promise<unknown>
+                : T extends (...a: never) => PromiseLike<unknown>
                   ? Promise<R>
                   : R;
         }
