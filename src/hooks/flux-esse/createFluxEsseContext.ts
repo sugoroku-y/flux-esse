@@ -95,11 +95,26 @@ const contextMap = new WeakMap() as ContextMap;
  * StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
  * コンテキストとして利用できなくなります。
  * @example
- * const SampleContext = createFluxEsseContext(class {
- *     text = '';
- *     change(newText: string) {
- *         this.text = newText;
- *     }
+ * const SampleContext = createFluxEsseContext(
+ *     class {
+ *         text = '';
+ *         count = 0;
+ *         change(newText: string) {
+ *             this.text = newText;
+ *         }
+ *         increment() {
+ *             this.count += 1;
+ *         },
+ *     },
+ *     ({text}, {increment}) => {
+ *         // textが変更されたらcountを1つ増やす
+ *         useEffect(
+ *             () => {
+ *                 increment();
+ *             },
+ *             [text, increment]
+ *         );
+ *     },
  * });
  */
 export function createFluxEsseContext<Store extends object>(
@@ -117,12 +132,27 @@ export function createFluxEsseContext<Store extends object>(
  * initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
  * コンテキストとして利用できなくなります。
  * @example
- * const SampleContext = createFluxEsseContext({
- *     text: '',
- *     change(newText: string) {
- *         this.text = newText;
+ * const SampleContext = createFluxEsseContext(
+ *     {
+ *         text: '',
+ *         count: 0,
+ *         change(newText: string) {
+ *             this.text = newText;
+ *         },
+ *         increment() {
+ *             this.count += 1;
+ *         },
  *     },
- * });
+ *     ({text}, {increment}) => {
+ *         // textが変更されたらcountを1つ増やす
+ *         useEffect(
+ *             () => {
+ *                 increment();
+ *             },
+ *             [text, increment]
+ *         );
+ *     },
+ * );
  */
 export function createFluxEsseContext<Store extends object>(
     initialStore: Store,
@@ -139,8 +169,9 @@ export function createFluxEsseContext<Store extends object>(
  * function useSomthing<Store extends object>(
  *     storeSpec: Store | (new () => Store),
  * ) {
+ *    // storeSpecが正しく型判定されるように型パラメーターを指定する
  *    const context = createFluxEsseContext<Store>(storeSpec);
- *     // ...
+ *    // ...
  * }
  */
 export function createFluxEsseContext<Store extends object>(
