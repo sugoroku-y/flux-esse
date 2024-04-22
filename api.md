@@ -112,7 +112,7 @@ ___
 
 ### createFluxEsseContext
 
-▸ **createFluxEsseContext**\<`Store`\>(`StoreClass`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
+▸ **createFluxEsseContext**\<`Store`\>(`StoreClass`, `hooks?`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 [useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
@@ -127,6 +127,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。 |
+| `hooks?` | (...`value`: `StoreAndActions`\<`Store`\>) => `void` | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
 
 #### Returns
 
@@ -140,15 +141,30 @@ StoreClassとして1つもハンドラーを持たないクラスを指定する
 **`Example`**
 
 ```ts
-const SampleContext = createFluxEsseContext(class {
-    text = '';
-    change(newText: string) {
-        this.text = newText;
-    }
+const SampleContext = createFluxEsseContext(
+    class {
+        text = '';
+        count = 0;
+        change(newText: string) {
+            this.text = newText;
+        }
+        increment() {
+            this.count += 1;
+        },
+    },
+    ({text}, {increment}) => {
+        // textが変更されたらcountを1つ増やす
+        useEffect(
+            () => {
+                increment();
+            },
+            [text, increment]
+        );
+    },
 });
 ```
 
-▸ **createFluxEsseContext**\<`Store`\>(`initialStore`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
+▸ **createFluxEsseContext**\<`Store`\>(`initialStore`, `hooks?`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 [useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
@@ -165,6 +181,7 @@ const SampleContext = createFluxEsseContext(class {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3] |
+| `hooks?` | (...`value`: `StoreAndActions`\<`Store`\>) => `void` | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
 
 #### Returns
 
@@ -178,12 +195,27 @@ initialStoreとして1つもハンドラーを持たないオブジェクトを�
 **`Example`**
 
 ```ts
-const SampleContext = createFluxEsseContext({
-    text: '',
-    change(newText: string) {
-        this.text = newText;
+const SampleContext = createFluxEsseContext(
+    {
+        text: '',
+        count: 0,
+        change(newText: string) {
+            this.text = newText;
+        },
+        increment() {
+            this.count += 1;
+        },
     },
-});
+    ({text}, {increment}) => {
+        // textが変更されたらcountを1つ増やす
+        useEffect(
+            () => {
+                increment();
+            },
+            [text, increment]
+        );
+    },
+);
 ```
 
 ___
