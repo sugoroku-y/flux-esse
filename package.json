@@ -1,5 +1,5 @@
 {
-  "name": "flux-esse",
+  "name": "@sugoroku-y/flux-esse",
   "version": "0.0.1",
   "description": "This package provides custom hooks that realize the essence of the FLUX architecture.",
   "main": "dist/index.js",
@@ -15,6 +15,9 @@
     "react"
   ],
   "author": "YEBISUYA Sugoroku <yebisuya@gmail.com> (https://qiita.com/sugoroku_y)",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/sugoroku-y"
+  },
   "license": "MIT",
   "peerDependencies": {
     "immer": "^10.0.3",
