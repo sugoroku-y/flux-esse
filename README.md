@@ -38,17 +38,21 @@ A2 -down-> D
 
 ## インストール
 
-以下のコマンドでインストールしてください。
+まず、プロジェクトのディレクトリに以下の内容で`.npmrc`を作成します。
 
-```bash
-npm install flux-esse
+```plaintext
+@sugoroku-y:registry=https://npm.pkg.github.com
 ```
 
-または
+この設定によって、`@sugoroku-y/`が頭についたscoped packagesがGitHub Packagesからインストールされるようになります。
+
+次に、以下のコマンドでインストールしてください。
 
 ```bash
-yarn add flux-esse
+npm install @sugoroku-y/flux-esse
 ```
+
+yarnをご利用の場合は適宜読み替えてください。
 
 ## 利用方法
 
