@@ -144,7 +144,7 @@ describe('createFluxEsseContext', () => {
     describe('error', () => {
         test('no handler', () => {
             const exception = new Error(
-                'The store must have one or more action handler.',
+                'store must have one or more action handlers.',
             );
             const unhandledException = expect.objectContaining({
                 type: 'unhandled exception',
@@ -175,14 +175,20 @@ describe('createFluxEsseContext', () => {
                         displayName: '',
                     }),
                 ),
-            ).toThrow(/^Specify the context created by createFluxEsseContext$/);
+            ).toThrow(
+                new Error(
+                    'context must be created with createFluxEsseContext.',
+                ),
+            );
         });
         test('outbound', () => {
             const TestContext = createFluxEsseContext({ a() {} });
             expect(() =>
                 renderHookWithError(() => useFluxEsseContext(TestContext)),
             ).toThrow(
-                /^Use useFluxEsseContext inside FluxEsseContext\.Provider$/,
+                new Error(
+                    'useFluxEsseContext must be used within the descendant component of FluxEsseContext.Provider.',
+                ),
             );
         });
     });

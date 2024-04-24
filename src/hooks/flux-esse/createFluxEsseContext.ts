@@ -243,9 +243,9 @@ export function useFluxEsseContext<Store extends object>(
 ): StoreAndActions<Store> {
     const original =
         contextMap.get(context) ??
-        error`Specify the context created by createFluxEsseContext`;
+        error`context must be created with createFluxEsseContext.`;
     return (
         useContext(original) ??
-        error`Use useFluxEsseContext inside ${context.displayName}.Provider`
+        error`useFluxEsseContext must be used within the descendant component of ${context.displayName}.Provider.`
     );
 }

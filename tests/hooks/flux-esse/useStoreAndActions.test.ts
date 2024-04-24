@@ -46,7 +46,7 @@ describe('flux-esse', () => {
             expect(() =>
                 renderHookWithError(() => useStoreAndActions({})),
             ).toThrow(
-                new Error('The store must have one or more action handler.'),
+                new Error('store must have one or more action handlers.'),
             );
         });
         test('invalid handler call', () => {

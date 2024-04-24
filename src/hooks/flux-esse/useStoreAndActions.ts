@@ -204,5 +204,5 @@ function* actionEntries<Store extends object>(
             valid = true;
         }
     }
-    valid || error`The store must have one or more action handler.`;
+    valid || error`store must have one or more action handlers.`;
 }
