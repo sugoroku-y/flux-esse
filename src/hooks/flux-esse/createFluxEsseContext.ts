@@ -13,14 +13,21 @@ import {
     useStoreAndActions,
 } from './useStoreAndActions';
 
+/** ReactのコンテキストをStoreから生成します。 */
 type OriginalContext<Store extends object> = Context<
     StoreAndActions<Store> | undefined
 >;
 
+/**
+ * コンテキストを提供するためのコンポーネントのプロパティです。
+ *
+ * ReactのProviderとは違いvalueプロパティを持ちません。
+ */
 type ProviderProps<Store extends object> = Omit<
     ComponentProps<OriginalContext<Store>['Provider']>,
     'value'
 >;
+/** コンテキストを提供するためのコンポーネントです。 */
 type Provider<Store extends object> = (
     props: ProviderProps<Store>,
 ) => ReactNode;
@@ -29,21 +36,16 @@ type Provider<Store extends object> = (
  * {@link createFluxEsseContext}の返す型です。
  *
  * コンテキストを利用できるようにするためのProviderと、デバッグ情報などで表示されるコンテキストの名前を持ちます。
- * @interface FluxEsseContext
  * @template Store
  */
-export interface FluxEsseContext<Store extends object> {
+interface FluxEsseContext<Store extends object> {
     /**
-     * コンテキストを利用できるようにするためのProviderです。
+     * コンテキストを利用できるようにするためのProviderコンポーネントです。
+     *
+     * ReactのProviderコンポーネントとは違いvalueプロパティを持ちません。
      * @example
-     * const SampleContext = createFluxEsseContext({
-     *     // ...
-     * }, (_, {change}) => {
-     *     useEffect(() => {
-     *         change('test');
-     *     }, [])
-     * });
-     * function PageComponent() {
+     * const SampleContext = createFluxEsseContext({ ... });
+     * function SamplePage() {
      *     return (
      *         <SampleContext.Provider>
      *             <Sample1Component />
@@ -60,7 +62,7 @@ export interface FluxEsseContext<Store extends object> {
      * 変更することで名前が変わるところがあるかも知れません。
      * @default 'FluxEsseContext'
      *
-     * Reactのコンテキストにある`displayName`と違い、初期状態で設定されているため、オプショナルではありません。
+     * Reactのコンテキストが持つ `displayName` とは違い、初期状態で設定されているため、オプショナルではありません。
      */
     displayName: string;
 }
@@ -89,13 +91,18 @@ interface ContextMap
  */
 const contextMap = new WeakMap() as ContextMap;
 
+/** コンテキストを提供するProviderがレンダリングされたタイミングで呼び出されるフックです。 */
+type Hooks<Store extends object> = (
+    ...value: StoreAndActions<Store>
+) => void;
+
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
  * @param StoreClass 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
- * @returns StoreとActionを扱うコンテキスト
+ * @returns StoreとActionを扱うコンテキストを返します。
  *
- * StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+ * StoreClassが1つもハンドラーを持たない場合、返値の型がnever型となり、
  * コンテキストとして利用できなくなります。
  * @example
  * const SampleContext = createFluxEsseContext(
@@ -107,7 +114,7 @@ const contextMap = new WeakMap() as ContextMap;
  *         }
  *         increment() {
  *             this.count += 1;
- *         },
+ *         }
  *     },
  *     ({text}, {increment}) => {
  *         // textが変更されたらcountを1つ増やす
@@ -122,7 +129,7 @@ const contextMap = new WeakMap() as ContextMap;
  */
 export function createFluxEsseContext<Store extends object>(
     StoreClass: new () => Store,
-    hooks?: (...value: StoreAndActions<Store>) => void,
+    hooks?: Hooks<Store>,
 ): Validation<Store, FluxEsseContext<Store>>;
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
@@ -130,9 +137,9 @@ export function createFluxEsseContext<Store extends object>(
  * [^3]: 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
  * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3]
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
- * @returns StoreとActionを扱うコンテキスト
+ * @returns StoreとActionを扱うコンテキストを返します。
  *
- * initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+ * initialStoreが1つもハンドラーを持たない場合、返値の型がnever型となり、
  * コンテキストとして利用できなくなります。
  * @example
  * const SampleContext = createFluxEsseContext(
@@ -159,13 +166,13 @@ export function createFluxEsseContext<Store extends object>(
  */
 export function createFluxEsseContext<Store extends object>(
     initialStore: Store,
-    hooks?: (...value: StoreAndActions<Store>) => void,
+    hooks?: Hooks<Store>,
 ): Validation<Store, FluxEsseContext<Store>>;
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
  * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
- * @returns StoreとActionを扱うコンテキスト
+ * @returns StoreとActionを扱うコンテキストを返します。
  * @hidden
  * @remark 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
  * @example
@@ -179,18 +186,18 @@ export function createFluxEsseContext<Store extends object>(
  */
 export function createFluxEsseContext<Store extends object>(
     storeSpec: Store | (new () => Store),
-    hooks?: (...value: StoreAndActions<Store>) => void,
+    hooks?: Hooks<Store>,
 ): Validation<Store, FluxEsseContext<Store>>;
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
  * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
- * @returns StoreとActionを扱うコンテキスト
+ * @returns StoreとActionを扱うコンテキストを返します。
  * @remark createFluxEsseContextの実装
  */
 export function createFluxEsseContext<Store extends object>(
     storeSpec: Store | (new () => Store),
-    hooks?: (...value: StoreAndActions<Store>) => void,
+    hooks?: Hooks<Store>,
 ): FluxEsseContext<Store> {
     const original = createContext<StoreAndActions<Store> | undefined>(
         undefined,
@@ -212,10 +219,18 @@ export function createFluxEsseContext<Store extends object>(
     return context;
 }
 
+/**
+ * Providerコンポーネントを生成します。
+ * @param storeSpec {@link useStoreAndActions}に指定するStoreの詳細
+ * @param context Reactのコンテキスト
+ * @param context.Provider Reactのコンテキストで提供されるProviderコンポーネント
+ * @param hooks Providerコンポーネントのレンダリング時に実行されるフック
+ * @returns FluxEsseContextのProviderコンポーネントを返します。
+ */
 function createProvider<Store extends object>(
     storeSpec: Store | (new () => Store),
     { Provider: original }: OriginalContext<Store>,
-    hooks?: (...value: StoreAndActions<Store>) => void,
+    hooks?: Hooks<Store>,
 ): Provider<Store> {
     // デバッグ時などでコンポーネントとして表示する際に使われるため、
     // アロー関数ではなく関数式にして名前を明示的に付けておく
@@ -230,6 +245,7 @@ function createProvider<Store extends object>(
  * 不正なコンテキストが指定されています。
  * @param invalidContext 不正なコンテキスト
  * @deprecated
+ * @hidden
  */
 export function useFluxEsseContext(invalidContext: never): never;
 
@@ -241,6 +257,10 @@ export function useFluxEsseContext(invalidContext: never): never;
  * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
+ * 
+ * contextが{@link createFluxEsseContext}で生成されていない場合や、
+ * contextを作成したときの{@link createFluxEsseContext}に指定されたStoreが1つもハンドラーを持たない場合、
+ * 返値の型がnever型となり、StoreやActionが利用できなくなります。
  * @example
  * const [store, {change}] = useFluxEsseContext(SampleContext);
  * @throws 以下の場合に例外を投げます。

@@ -3,15 +3,41 @@ import { type Immutable, freeze, produce, isDraftable, immerable } from 'immer';
 import { error } from '../../utils/error';
 import { getAllPropertyKeys } from '../../utils/getAllPropertyKeys';
 
+/**
+ * useReducerに指定するrecipeで使用するActionの型です。
+ * 
+ * Actionを処理するハンドラーの名前と引数になります。
+ */
 interface ActionPayload {
+    /** Actionを処理するハンドラーの名前。 */
     type: PropertyKey;
+    /** Actionを処理するハンドラーに渡される引数。 */
     payload: unknown[];
 }
 
+/**
+ * Actionを処理するハンドラーの型です。
+ * 
+ * Actionを発行するメソッドの型でもあります。
+ */
 type Action = (...payload: ActionPayload['payload']) => void;
 
+/**
+ * Actionを処理するハンドラーの名前とハンドラーのマップです。
+ * 
+ * StoreからActionを処理するハンドラーを取得するために使用します。
+ */
 type HandlerMap = Record<ActionPayload['type'], Action>;
 
+/**
+ * StoreからActionを処理するハンドラーの名前をUnion型として抽出します。
+ * 
+ * Actionを処理するハンドラーとして見なされる条件は以下のとおりです。
+ * 
+ * - publicにアクセス可能であること。
+ * - インスタンスメソッドであること。
+ * - 返値がvoid型であること。
+ */
 type ReducibleTypes<Store extends object> = keyof {
     [Type in keyof Store as Type extends ActionPayload['type']
         ? Store[Type] extends (...payload: infer Payload) => infer ReturnType
@@ -25,7 +51,7 @@ type ReducibleTypes<Store extends object> = keyof {
 };
 
 /**
- * Storeで処理されるActionを発行するメソッド群です。
+ * Storeで処理可能なActionを発行するメソッド群です。
  *
  * 各メソッドはthisと関連付けられていないのでspread展開して利用できます。
  */
@@ -33,7 +59,7 @@ type Actions<Store extends object> = Readonly<
     Pick<Store, ReducibleTypes<Store>>
 >;
 /**
- * Storeからハンドラーを取り除いた型です。
+ * StoreからActionを処理するハンドラーを取り除いた型です。
  *
  * 参照専用で変更不可になっています。
  */
@@ -69,7 +95,7 @@ export type Validation<Store extends object, T> = [
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
  *
- * StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+ * StoreClassが1つもハンドラーを持たない場合、返値の型がnever型となり、
  * StoreやActionが利用できなくなります。
  * @example
  * const [store, {change}] = useStoreAndActions(class {
@@ -96,7 +122,7 @@ export function useStoreAndActions<Store extends object>(
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
  *
- * initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+ * initialStoreが1つもハンドラーを持たない場合、返値の型がnever型となり、
  * StoreやActionが利用できなくなります。
  * @example
  * const [store, {change}] = useStoreAndActions({

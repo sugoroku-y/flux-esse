@@ -1,4 +1,4 @@
-# flux-esse
+# @sugoroku-y/flux-esse
 
 useReducerとimmerを使ってFLUXアーキテクチャーの本質的な部分を実装するカスタムフックです。
 

@@ -1,4 +1,4 @@
-# flux-esse - v0.0.1
+# @sugoroku-y/flux-esse - v0.0.1
 
 ## Table of contents
 
@@ -40,7 +40,7 @@ StoreとActionを発行するメソッドを持つオブジェクトを返しま
 
 Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
 
-StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+StoreClassが1つもハンドラーを持たない場合、返値の型がnever型となり、
 StoreやActionが利用できなくなります。
 
 **`Example`**
@@ -88,7 +88,7 @@ StoreとActionを発行するメソッドを持つオブジェクトを返しま
 
 Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
 
-initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+initialStoreが1つもハンドラーを持たない場合、返値の型がnever型となり、
 StoreやActionが利用できなくなります。
 
 **`Example`**
@@ -127,15 +127,15 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。 |
-| `hooks?` | (...`value`: `StoreAndActions`\<`Store`\>) => `void` | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
+| `hooks?` | `Hooks`\<`Store`\> | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
 
 #### Returns
 
 `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
-StoreとActionを扱うコンテキスト
+StoreとActionを扱うコンテキストを返します。
 
-StoreClassとして1つもハンドラーを持たないクラスを指定すると返値の型がnever型となり、
+StoreClassが1つもハンドラーを持たない場合、返値の型がnever型となり、
 コンテキストとして利用できなくなります。
 
 **`Example`**
@@ -150,7 +150,7 @@ const SampleContext = createFluxEsseContext(
         }
         increment() {
             this.count += 1;
-        },
+        }
     },
     ({text}, {increment}) => {
         // textが変更されたらcountを1つ増やす
@@ -181,15 +181,15 @@ const SampleContext = createFluxEsseContext(
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3] |
-| `hooks?` | (...`value`: `StoreAndActions`\<`Store`\>) => `void` | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
+| `hooks?` | `Hooks`\<`Store`\> | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
 
 #### Returns
 
 `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
-StoreとActionを扱うコンテキスト
+StoreとActionを扱うコンテキストを返します。
 
-initialStoreとして1つもハンドラーを持たないオブジェクトを指定すると返値の型がnever型となり、
+initialStoreが1つもハンドラーを持たない場合、返値の型がnever型となり、
 コンテキストとして利用できなくなります。
 
 **`Example`**
@@ -222,7 +222,7 @@ ___
 
 ### useFluxEsseContext
 
-▸ **useFluxEsseContext**\<`Store`\>(`context`): `StoreAndActions`\<`Store`\>
+▸ **useFluxEsseContext**\<`Store`\>(`context`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
 [createFluxEsseContext](api.md#createfluxessecontext)で生成したコンテキストからStoreとActionを取得します。
 
@@ -240,13 +240,17 @@ ___
 
 #### Returns
 
-`StoreAndActions`\<`Store`\>
+`Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
 StoreとActionを発行するメソッドを持つオブジェクトを返します。
 
 ただし、Storeからはハンドラーが除外されています。
 
 Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
+
+contextが[createFluxEsseContext](api.md#createfluxessecontext)で生成されていない場合や、
+contextを作成したときの[createFluxEsseContext](api.md#createfluxessecontext)に指定されたStoreが1つもハンドラーを持たない場合、
+返値の型がnever型となり、StoreやActionが利用できなくなります。
 
 **`Example`**
 

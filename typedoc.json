@@ -10,6 +10,7 @@
     "intentionallyNotExported": [
         "Validation",
         "FluxEsseContext",
+        "Hooks",
         "StoreAndActions"
     ],
     "treatWarningsAsErrors": true,
