@@ -27,9 +27,9 @@ type ReducibleTypes<Store extends object> = keyof {
 /**
  * Storeで処理されるActionを発行するメソッド群です。
  *
- * thisと関連付けられていないのでspread展開して利用できます。
+ * 各メソッドはthisと関連付けられていないのでspread展開して利用できます。
  */
-export type Actions<Store extends object> = Readonly<
+type Actions<Store extends object> = Readonly<
     Pick<Store, ReducibleTypes<Store>>
 >;
 /**
@@ -37,7 +37,7 @@ export type Actions<Store extends object> = Readonly<
  *
  * 参照専用で変更不可になっています。
  */
-export type ImmutableStore<Store extends object> = Immutable<
+type ImmutableStore<Store extends object> = Immutable<
     Omit<Store, ReducibleTypes<Store>>
 >;
 

@@ -8,7 +8,6 @@ import {
 } from 'react';
 import { error } from '../../utils/error';
 import {
-    type Actions,
     type StoreAndActions,
     type Validation,
     useStoreAndActions,
@@ -18,9 +17,10 @@ type OriginalContext<Store extends object> = Context<
     StoreAndActions<Store> | undefined
 >;
 
-type ProviderProps<Store extends object> = {
-    initialize?: (actions: Actions<Store>) => void;
-} & Omit<ComponentProps<OriginalContext<Store>['Provider']>, 'value'>;
+type ProviderProps<Store extends object> = Omit<
+    ComponentProps<OriginalContext<Store>['Provider']>,
+    'value'
+>;
 type Provider<Store extends object> = (
     props: ProviderProps<Store>,
 ) => ReactNode;
@@ -38,17 +38,20 @@ export interface FluxEsseContext<Store extends object> {
      * @example
      * const SampleContext = createFluxEsseContext({
      *     // ...
+     * }, (_, {change}) => {
+     *     useEffect(() => {
+     *         change('test');
+     *     }, [])
      * });
      * function PageComponent() {
      *     return (
-     *         <SampleContext.Provider initialize={({change}) => change('test')}>
+     *         <SampleContext.Provider>
      *             <Sample1Component />
      *             <Sample2Component />
      *             {...}
      *         </SampleContext.Provider>
      *     );
      * }
-     * @property initialize レンダリングの初回に実行される関数。第1引数として{@link Actions}が指定されます。
      */
     readonly Provider: Provider<Store>;
     /**
@@ -57,7 +60,7 @@ export interface FluxEsseContext<Store extends object> {
      * 変更することで名前が変わるところがあるかも知れません。
      * @default 'FluxEsseContext'
      *
-     * Reactのコンテキストと違って初期状態で設定されているため、オプショナルではありません。
+     * Reactのコンテキストにある`displayName`と違い、初期状態で設定されているため、オプショナルではありません。
      */
     displayName: string;
 }
