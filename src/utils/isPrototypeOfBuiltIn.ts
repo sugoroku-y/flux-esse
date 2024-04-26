@@ -8,6 +8,8 @@ export function isPrototypeOfBuiltIn(obj: object) {
         Object.hasOwn(obj, 'constructor') &&
         typeof obj.constructor === 'function' &&
         obj.constructor.prototype === obj &&
-        /\{\s*\[native code\]\s*\}\s*$/.test(String(obj.constructor))
+        /\{\s*\[native code\]\s*\}\s*$/.test(
+            Function.prototype.toString.call(obj.constructor),
+        )
     );
 }
