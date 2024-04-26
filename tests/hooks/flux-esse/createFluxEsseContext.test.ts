@@ -123,8 +123,8 @@ describe('createFluxEsseContext', () => {
         expect(view.textContent).toBe('1x');
     });
     test('initialize', () => {
+        const initialize = jest.fn();
         const termination = jest.fn();
-        const initialize = jest.fn().mockReturnValue(termination);
         const TestContext = createFluxEsseContext({ a() {} }, () => {
             useEffect(() => {
                 initialize();
