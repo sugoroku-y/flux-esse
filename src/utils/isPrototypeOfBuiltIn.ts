@@ -5,7 +5,7 @@
  */
 export function isPrototypeOfBuiltIn(obj: object) {
     return (
-        Object.prototype.hasOwnProperty.call(obj, 'constructor') &&
+        Object.hasOwn(obj, 'constructor') &&
         typeof obj.constructor === 'function' &&
         obj.constructor.prototype === obj &&
         /\{\s*\[native code\]\s*\}\s*$/.test(String(obj.constructor))
