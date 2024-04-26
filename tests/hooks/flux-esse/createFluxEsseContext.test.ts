@@ -192,4 +192,15 @@ describe('createFluxEsseContext', () => {
             );
         });
     });
+    test.skip('invalid context', () => {
+        const InvalidContext = createFluxEsseContext({});
+        // ハンドラーのないオブジェクトが指定されていればnever型になる
+        expect(InvalidContext).toEqualType<never>();
+        // never型のコンテキストを指定したらnever型を返す
+        expect(useFluxEsseContext(InvalidContext)).toEqualType<never>();
+        // createFluxEsseContextで生成していないコンテキストを指定したらnever型を返す
+        expect(
+            useFluxEsseContext({ Provider: () => null, displayName: '' }),
+        ).toEqualType<never>();
+    });
 });

@@ -227,6 +227,13 @@ function createProvider<Store extends object>(
 }
 
 /**
+ * 不正なコンテキストが指定されています。
+ * @param invalidContext 不正なコンテキスト
+ * @deprecated
+ */
+export function useFluxEsseContext(invalidContext: never): never;
+
+/**
  * {@link createFluxEsseContext}で生成したコンテキストからStoreとActionを取得します。
  * @param context {@link createFluxEsseContext}で生成したコンテキスト
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
@@ -240,6 +247,15 @@ function createProvider<Store extends object>(
  *
  * - {@link createFluxEsseContext}で生成されていないコンテキストを指定した場合。
  * - FluxEsseContext.Providerの中ではない場所で使用された場合。
+ */
+export function useFluxEsseContext<Store extends object>(
+    context: FluxEsseContext<Store>,
+): Validation<Store, StoreAndActions<Store>>;
+/**
+ * {@link createFluxEsseContext}で生成したコンテキストからStoreとActionを取得します。
+ * @param context {@link createFluxEsseContext}で生成したコンテキスト
+ * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
+ * @remark useFluxEsseContextの実装
  */
 export function useFluxEsseContext<Store extends object>(
     context: FluxEsseContext<Store>,
