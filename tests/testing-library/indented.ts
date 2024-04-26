@@ -1,31 +1,34 @@
 import { unescape } from './unescape';
 
-export function indented(
-    ...args: [TemplateStringsArray, ...unknown[]]
-): string {
-    const [{ raw: template }] = args;
+export function indented({ raw }: TemplateStringsArray, ...values: unknown[]): string {
     // 最後の改行から終端までが空白とタブだけであればその空白とタブの連続をインデントと見なす
-    const indent = /\n[ \t]+$/.exec(template[template.length - 1])?.[0];
-    const modifier =
-        indent && template[0].startsWith(indent)
+    const indent = /\n[ \t]+$/.exec(raw[raw.length - 1])?.[0];
+    const template =
+        indent && raw[0].startsWith(indent)
             ? // 先頭が終端と同じ改行とインデントで始まっていればインデント除去とエスケープ解除
-              unindentAndUnescape(template.length, indent)
+              unindentAndUnescape(raw, indent)
             : // でなければエスケープ解除のみ
-              unescape;
-    return (
-        template
-            // インデント除去
-            .map(modifier)
-            // テンプレートリテラルを連結
-            .reduce((r, e, i) => r.concat(String(args[i]), e))
-            // 先頭と終端の改行は削除
-            .replace(/^\n|\n$/g, '')
+              unescapeOnly(raw);
+    // テンプレートリテラルを連結
+    return values.reduce<string>(
+        (r, v, i) => r.concat(String(v), template(i + 1)),
+        template(0),
     );
 }
 
-function unindentAndUnescape(length: number, indent: string) {
-    return (t: string, i: number) =>
-        unescape(trimNewLine(t.replaceAll(indent, '\n'), i, length));
+function unindentAndUnescape(template: readonly string[], indent: string) {
+    return (i: number) =>
+        unescape(
+            trimNewLine(
+                template[i].replaceAll(indent, '\n'),
+                i,
+                template.length,
+            ),
+        );
+}
+
+function unescapeOnly(template: readonly string[]) {
+    return (i: number) => unescape(template[i]);
 }
 
 function trimNewLine(t: string, i: number, length: number): string {
@@ -39,8 +42,8 @@ function trimNewLine(t: string, i: number, length: number): string {
               : i === length - 1
                 ? // 終端の改行を除去
                   /\n$/
-                : // 改行を消す必要がない場合は置換が発生しないパターンにする
-                  /^$/,
+                : // 改行を消す必要がない場合は絶対にマッチしないパターンにする
+                  /^(?=.)$/,
         '',
     );
 }
