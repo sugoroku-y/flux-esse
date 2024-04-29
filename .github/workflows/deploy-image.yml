@@ -19,7 +19,7 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@sugoroku-y'
       - run: |-
-          [ `npm view typescript dist-tags.latest` == `node -p "require('./package.json').version"` ] && exit 0
+          [ `npm view typescript dist-tags.latest` == `node -p "require('./package.json').version"` ] && exit 1
           npm ci && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
