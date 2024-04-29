@@ -18,7 +18,8 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
           scope: '@sugoroku-y'
-      - run: npm ci
-      - run: npm publish
+      - run: |-
+          [ `npm view typescript dist-tags.latest` == `node -p "require('./package.json').version"` ] && exit 0
+          npm ci && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
