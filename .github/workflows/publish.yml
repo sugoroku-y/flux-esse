@@ -21,5 +21,9 @@ jobs:
       - run: |-
           npm ci
           npm publish
+          git checkout -b release/v`node -p "require('./package.json').version"`
+          git add -f dist api.md
+          git commit -m 'Publish v`node -p "require('./package.json').version"`'
+          git push -u origin release/v`node -p "require('./package.json').version"`
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
