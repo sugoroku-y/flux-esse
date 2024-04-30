@@ -1,6 +1,6 @@
 {
   "name": "@sugoroku-y/flux-esse",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This package provides custom hooks that realize the essence of the FLUX architecture.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
