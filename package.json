@@ -9,6 +9,7 @@
     "test": "jest",
     "prebuild": "npm test --lint",
     "build": "tsc",
+    "postbuild": "npm run docs",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
