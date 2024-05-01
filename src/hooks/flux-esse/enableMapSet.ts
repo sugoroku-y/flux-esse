@@ -1,4 +1,4 @@
-import immer from 'immer';
+import * as immer from 'immer';
 
 /**
  * StoreのプロパティとしてES2015のMapやSetを持つとき、Actionのハンドラー内で変更できるようにします。
