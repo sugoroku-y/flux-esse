@@ -1,7 +1,6 @@
 {
     "cleanOutputDir": false,
     "excludeInternal": true,
-    "includeVersion": true,
     "readme": "none",
     "plugin": ["typedoc-plugin-markdown"],
     "githubPages": false,

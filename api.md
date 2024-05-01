@@ -1,4 +1,4 @@
-# @sugoroku-y/flux-esse - v0.0.2
+# @sugoroku-y/flux-esse
 
 ## Table of contents
 
