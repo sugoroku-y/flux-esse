@@ -146,7 +146,7 @@ describe('createFluxEsseContext', () => {
             const exception = new Error(
                 'store must have one or more action handlers.',
             );
-            const unhandledException = expect.objectContaining({
+            const unhandledException: unknown = expect.objectContaining({
                 type: 'unhandled exception',
                 detail: exception,
             });

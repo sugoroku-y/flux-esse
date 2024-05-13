@@ -13,7 +13,7 @@ export function* prototypes(
     for (
         let obj = target;
         obj != null && !isPrototypeOfBuiltIn(obj);
-        obj = Object.getPrototypeOf(obj)
+        obj = Object.getPrototypeOf(obj) as typeof target
     ) {
         yield obj;
     }
