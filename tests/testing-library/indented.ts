@@ -1,11 +1,19 @@
 import { unescape } from './unescape';
 
-export function indented({ raw }: TemplateStringsArray, ...values: unknown[]): string {
+export function indented(
+    { raw }: TemplateStringsArray,
+    ...values: unknown[]
+): string {
     // 最後の改行から終端までが空白とタブだけであればその空白とタブの連続をインデントと見なす
-    const indent = /\n[ \t]+$/.exec(raw[raw.length - 1])?.[0];
+    const indent = /(?:\r\n|[\r\n\u2028\u2029])([ \t]+)$/.exec(
+        raw[raw.length - 1],
+    )?.[1];
     const template =
-        indent && raw[0].startsWith(indent)
-            ? // 先頭が終端と同じ改行とインデントで始まっていればインデント除去とエスケープ解除
+        indent &&
+        /^(?:\r\n|[\r\n\u2028\u2029])([ \t]+)/
+            .exec(raw[0])?.[1]
+            .startsWith(indent)
+            ? // 先頭が終端と同じく改行とインデントで始まっていればインデント除去とエスケープ解除
               unindentAndUnescape(raw, indent)
             : // でなければエスケープ解除のみ
               unescapeOnly(raw);
@@ -20,7 +28,13 @@ function unindentAndUnescape(template: readonly string[], indent: string) {
     return (i: number) =>
         unescape(
             trimNewLine(
-                template[i].replaceAll(indent, '\n'),
+                template[i].replace(
+                    /(\r\n|[\r\n\u2028\u2029])([ \t]*)/g,
+                    (match, newline: string, whitespace: string) =>
+                        whitespace.startsWith(indent)
+                            ? `${newline}${whitespace.slice(indent.length)}`
+                            : match,
+                ),
                 i,
                 template.length,
             ),
