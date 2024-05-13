@@ -240,6 +240,17 @@ describe('toOutputToConsoleError', () => {
             });
         },
     );
+    test('nested', () => {
+        expect(() => {
+            expect(() => {
+                expect(() => {}).toOutputToConsoleError([]);
+            }).toOutputToConsoleError([]);
+        }).toThrow(
+            new Error(
+                'already console.error mocked! Maybe the function `act` is not enclosed in {}?',
+            ),
+        );
+    });
 });
 
 function asynchronize(proc: () => void, type: 'async' | 'promise') {

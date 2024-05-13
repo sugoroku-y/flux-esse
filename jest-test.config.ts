@@ -20,7 +20,7 @@ const config: Config.InitialOptions = {
     },
     setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts'],
     testEnvironment: 'jsdom',
-    coveragePathIgnorePatterns: ['/node_modules/', '/tests/'],
+    coveragePathIgnorePatterns: ['/node_modules/', '/tests/hooks/'],
 };
 
 export default config;
