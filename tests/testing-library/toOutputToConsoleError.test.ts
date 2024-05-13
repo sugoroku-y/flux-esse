@@ -1,5 +1,3 @@
-import { indented } from './indented';
-
 describe('toOutputToConsoleError', () => {
     const expected = [
         ['first', new Error('test#1')],
@@ -23,25 +21,25 @@ describe('toOutputToConsoleError', () => {
         };
 
     const messages = {
-        'no output': indented`
+        'no output': expect.failureMessage`
             expect(received).not.toOutputToConsoleError(expected)
 
             Expected: not []
             Received:     []
             `,
-        'only one output': indented`
+        'only one output': expect.failureMessage`
             expect(received).not.toOutputToConsoleError(expected)
 
             Expected: not [["first", [Error: test#1]]]
             Received:     [["first", [Error: test#1]]]
             `,
-        'only two outputs': indented`
+        'only two outputs': expect.failureMessage`
             expect(received).not.toOutputToConsoleError(expected)
 
             Expected: not [["first", [Error: test#1]], ["second", [Error: test#2]]]
             Received:     [["first", [Error: test#1]], ["second", [Error: test#2]]]
             `,
-        'no output, but expected two outputs': indented`
+        'no output, but expected two outputs': expect.failureMessage`
             expect(received).toOutputToConsoleError(expected)
 
             - Expected  - 10
@@ -59,7 +57,7 @@ describe('toOutputToConsoleError', () => {
             - ]
             + Array []
             `,
-        'only one output, but expected no output': indented`
+        'only one output, but expected no output': expect.failureMessage`
             expect(received).toOutputToConsoleError(expected)
 
             - Expected  - 1
@@ -73,7 +71,7 @@ describe('toOutputToConsoleError', () => {
             +   ],
             + ]
             `,
-        'no output, but expected one output': indented`
+        'no output, but expected one output': expect.failureMessage`
             expect(received).toOutputToConsoleError(expected)
 
             - Expected  - 6
@@ -87,7 +85,7 @@ describe('toOutputToConsoleError', () => {
             - ]
             + Array []
             `,
-        'only one output, but expected two outputs': indented`
+        'only one output, but expected two outputs': expect.failureMessage`
             expect(received).toOutputToConsoleError(expected)
 
             - Expected  - 4
@@ -104,7 +102,7 @@ describe('toOutputToConsoleError', () => {
             -   ],
               ]
             `,
-        'only one output, but expected one different output': indented`
+        'only one output, but expected one different output': expect.failureMessage`
             expect(received).toOutputToConsoleError(expected)
 
             - Expected  - 2
@@ -119,7 +117,7 @@ describe('toOutputToConsoleError', () => {
                 ],
               ]
             `,
-        'only two outputs, but expected one output': indented`
+        'only two outputs, but expected one output': expect.failureMessage`
             expect(received).toOutputToConsoleError(expected)
 
             - Expected  - 0
@@ -136,7 +134,7 @@ describe('toOutputToConsoleError', () => {
             +   ],
               ]
             `,
-        'only two outputs, but expected no output': indented`
+        'only two outputs, but expected no output': expect.failureMessage`
             expect(received).toOutputToConsoleError(expected)
 
             - Expected  -  1
@@ -198,7 +196,7 @@ describe('toOutputToConsoleError', () => {
                 if (result === 'success') {
                     exp();
                 } else {
-                    expect(exp).toThrow(expect.failureMessage(message));
+                    expect(exp).toThrow(message);
                 }
             });
             test.each(['async', 'promise'] as const)('%s', async (type) => {
@@ -208,9 +206,7 @@ describe('toOutputToConsoleError', () => {
                 if (result === 'success') {
                     await exp;
                 } else {
-                    await expect(exp).rejects.toThrow(
-                        expect.failureMessage(message),
-                    );
+                    await expect(exp).rejects.toThrow(message);
                 }
             });
         });
