@@ -1,4 +1,3 @@
-import { indented } from './indented';
 import { isPromiseLike } from './isPromiseLike';
 
 function toOutputToConsoleError(
@@ -45,24 +44,18 @@ function testConsoleError(
     return {
         pass,
         message() {
-            return indented`
-                ${utils.matcherHint(...['toOutputToConsoleError', , , { isNot }])}
-
-                ${
-                    pass
-                        ? indented`
-                            Expected: not ${utils.printExpected(expected)}
-                            Received:     ${utils.printReceived(received)}
-                            `
-                        : utils.printDiffOrStringify(
-                              expected,
-                              received,
-                              'Expected',
-                              'Received',
-                              expand !== false,
-                          )
-                }
-                `;
+            return `${utils.matcherHint(...['toOutputToConsoleError', , , { isNot }])}\n\n${
+                pass
+                    ? `Expected: not ${utils.printExpected(expected)}\n` +
+                      `Received:     ${utils.printReceived(received)}`
+                    : utils.printDiffOrStringify(
+                          expected,
+                          received,
+                          'Expected',
+                          'Received',
+                          expand !== false,
+                      )
+            }`;
         },
     };
 }
