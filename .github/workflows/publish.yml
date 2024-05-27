@@ -20,16 +20,6 @@ jobs:
                   registry-url: 'https://npm.pkg.github.com'
                   # Defaults to the user or organization that owns the workflow file
                   scope: '@sugoroku-y'
-            - run: npm ci
             - run: npm publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            - run: rm -rf .github/workflows
-            - run: node -p '`RELEASE_VERSION=v${require("./package.json").version}`' >> $GITHUB_ENV
-            - uses: stefanzweifel/git-auto-commit-action@v4
-              with:
-                  commit_message: publish ${{ env.RELEASE_VERSION }}
-                  branch: release/${{ env.RELEASE_VERSION }}
-                  create_branch: true
-                  file_pattern: dist/ api.md .github/workflows/
-                  add_options: -f

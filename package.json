@@ -7,17 +7,23 @@
   "scripts": {
     "docs": "typedoc",
     "test": "jest",
-    "prebuild": "npm test --lint",
+    "prebuild": "npm test --coverage --lint",
     "build": "tsc",
     "postbuild": "npm run build-enableMapSet",
     "build-enableMapSet": "tsc -p enableMapSet/tsconfig.json",
     "postbuild-enableMapSet": "npm run docs",
-    "prepublishOnly": "npm run build"
+    "preversioncheck": "npm run build",
+    "versioncheck": "node tools/versioncheck.cjs",
+    "preversion": "npm run versioncheck"
   },
   "keywords": [
     "react"
   ],
-  "author": "YEBISUYA Sugoroku <yebisuya@gmail.com> (https://qiita.com/sugoroku_y)",
+  "author": {
+    "url": "https://qiita.com/sugoroku_y",
+    "name": "YEBISUYA Sugoroku",
+    "email": "yebisuya@gmail.com"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/sugoroku-y"
   },
