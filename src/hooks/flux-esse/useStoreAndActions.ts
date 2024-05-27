@@ -5,7 +5,7 @@ import { getAllPropertyKeys } from '../../utils/getAllPropertyKeys';
 
 /**
  * useReducerに指定するrecipeで使用するActionの型です。
- * 
+ *
  * Actionを処理するハンドラーの名前と引数になります。
  */
 interface ActionPayload {
@@ -17,23 +17,23 @@ interface ActionPayload {
 
 /**
  * Actionを処理するハンドラーの型です。
- * 
+ *
  * Actionを発行するメソッドの型でもあります。
  */
 type Action = (...payload: ActionPayload['payload']) => void;
 
 /**
  * Actionを処理するハンドラーの名前とハンドラーのマップです。
- * 
+ *
  * StoreからActionを処理するハンドラーを取得するために使用します。
  */
 type HandlerMap = Record<ActionPayload['type'], Action>;
 
 /**
  * StoreからActionを処理するハンドラーの名前をUnion型として抽出します。
- * 
+ *
  * Actionを処理するハンドラーとして見なされる条件は以下のとおりです。
- * 
+ *
  * - publicにアクセス可能であること。
  * - インスタンスメソッドであること。
  * - 返値がvoid型であること。

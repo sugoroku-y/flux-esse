@@ -92,9 +92,7 @@ interface ContextMap
 const contextMap = new WeakMap() as ContextMap;
 
 /** コンテキストを提供するProviderがレンダリングされたタイミングで呼び出されるフックです。 */
-type Hooks<Store extends object> = (
-    ...value: StoreAndActions<Store>
-) => void;
+type Hooks<Store extends object> = (...value: StoreAndActions<Store>) => void;
 
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
@@ -257,7 +255,7 @@ export function useFluxEsseContext(invalidContext: never): never;
  * ただし、Storeからはハンドラーが除外されています。
  *
  * Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
- * 
+ *
  * contextが{@link createFluxEsseContext}で生成されていない場合や、
  * contextを作成したときの{@link createFluxEsseContext}に指定されたStoreが1つもハンドラーを持たない場合、
  * 返値の型がnever型となり、StoreやActionが利用できなくなります。

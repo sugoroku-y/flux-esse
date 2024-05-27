@@ -68,17 +68,13 @@ yarnをご利用の場合は適宜読み替えてください。
 
 ```tsx
 function Component() {
-    const [{text}, {change}] = useStoreAndActions({
+    const [{ text }, { change }] = useStoreAndActions({
         text: 'initial',
         change(newText: string) {
             this.text = newText;
         },
     });
-    return (
-        <div onClick={() => change('next')}>
-            {text}
-        </div>
-    );
+    return <div onClick={() => change('next')}>{text}</div>;
 }
 ```
 
@@ -87,15 +83,17 @@ function Component() {
 複数のコンポーネントで1つのStoreを共有する場合はコンテキストを使う[`createFluxEsseContext`](api.md#createfluxessecontext)/[`useFluxEsseContext`](api.md#usefluxessecontext)を使います。
 
 ```tsx
-const SampleContext = createFluxEsseContext(class {
-    count = 0;
-    increment() {
-        this.count += 1;
-    }
-    decrement() {
-        this.count -= 1;
-    }
-});
+const SampleContext = createFluxEsseContext(
+    class {
+        count = 0;
+        increment() {
+            this.count += 1;
+        }
+        decrement() {
+            this.count -= 1;
+        }
+    },
+);
 
 function Page() {
     return (
@@ -108,28 +106,19 @@ function Page() {
 }
 
 function IncrementButton() {
-    const [, {increment}] = useFluxEsseContext(SampleContext);
-    return (
-        <button onClick={() => increment()}>
-            +
-        </button>
-    );
+    const [, { increment }] = useFluxEsseContext(SampleContext);
+    return <button onClick={() => increment()}>+</button>;
 }
 
 function CountView() {
-    const [{count}] = useFluxEsseContext(SampleContext);
+    const [{ count }] = useFluxEsseContext(SampleContext);
     return <span>{count}</span>;
 }
 
 function DecrementButton() {
-    const [, {decrement}] = useFluxEsseContext(SampleContext);
-    return (
-        <button onClick={() => decrement()}>
-            -
-        </button>
-    );
+    const [, { decrement }] = useFluxEsseContext(SampleContext);
+    return <button onClick={() => decrement()}>-</button>;
 }
-
 ```
 
 ### API
@@ -138,7 +127,7 @@ function DecrementButton() {
 
 ## Contributors
 
-- [蛭子屋双六](https://github.com/sugoroku-y)
+[蛭子屋双六](https://github.com/sugoroku-y)
 
 ## ライセンス
 
