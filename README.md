@@ -40,22 +40,10 @@ A2 -down-> D
 
 ## インストール
 
-まず、プロジェクトのディレクトリに以下の内容で`.npmrc`を作成します。
-
-```plaintext
-@sugoroku-y:registry=https://npm.pkg.github.com
-```
-
-この設定によって、`@sugoroku-y/`が頭についたscoped packagesがGitHub Packagesからインストールされるようになります。
-
-GitHub Packagesへのアクセスには認証が必要になります。
-
-現状ではpersonal access token (classic)を使用した認証しかサポートされていないようなので、[personal access token (classic) を作成・取得](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-token-classic-%E3%81%AE%E4%BD%9C%E6%88%90)し、[取得したtokenを使って認証](https://docs.github.com/ja/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#personal-access-token)してください。
-
-次に、以下のコマンドでインストールしてください。
+以下のコマンドでインストールしてください。
 
 ```bash
-npm install @sugoroku-y/flux-esse
+npm install sugoroku-y/flux-esse
 ```
 
 yarnをご利用の場合は適宜読み替えてください。
