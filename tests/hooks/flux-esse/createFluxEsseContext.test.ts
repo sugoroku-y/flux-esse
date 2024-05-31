@@ -1,7 +1,7 @@
 import { createElement, useEffect } from 'react';
 import { act, render } from '@testing-library/react';
-import { createFluxEsseContext, useFluxEsseContext } from '@';
-import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
+import { createFluxEsseContext, useFluxEsseContext } from '../../../src';
+import { renderHookWithError } from '../../testing-library/renderHookWithError';
 
 describe('createFluxEsseContext', () => {
     test('object literal', () => {
@@ -192,6 +192,7 @@ describe('createFluxEsseContext', () => {
             );
         });
     });
+    // eslint-disable-next-line jest/no-disabled-tests -- 型の検査のためなので実行しない
     test.skip('invalid context', () => {
         const InvalidContext = createFluxEsseContext({});
         // ハンドラーのないオブジェクトが指定されていればnever型になる

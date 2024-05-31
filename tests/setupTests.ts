@@ -5,5 +5,4 @@
 import '@testing-library/jest-dom';
 
 import 'jest-to-equal-type';
-import './testing-library/toOutputToConsoleError';
-import './testing-library/failureMessage';
+import '@sugoroku-y/jest-to-output-to-console-error';

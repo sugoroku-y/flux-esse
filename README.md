@@ -58,13 +58,13 @@ yarnをご利用の場合は適宜読み替えてください。
 
 ```tsx
 function Component() {
-    const [{ text }, { change }] = useStoreAndActions({
-        text: 'initial',
-        change(newText: string) {
-            this.text = newText;
-        },
-    });
-    return <div onClick={() => change('next')}>{text}</div>;
+  const [{ text }, { change }] = useStoreAndActions({
+    text: 'initial',
+    change(newText: string) {
+      this.text = newText;
+    },
+  });
+  return <div onClick={() => change('next')}>{text}</div>;
 }
 ```
 
@@ -74,40 +74,40 @@ function Component() {
 
 ```tsx
 const SampleContext = createFluxEsseContext(
-    class {
-        count = 0;
-        increment() {
-            this.count += 1;
-        }
-        decrement() {
-            this.count -= 1;
-        }
-    },
+  class {
+    count = 0;
+    increment() {
+      this.count += 1;
+    }
+    decrement() {
+      this.count -= 1;
+    }
+  },
 );
 
 function Page() {
-    return (
-        <SampleContext.Provider>
-            <IncrementButton />
-            <CountView />
-            <DecrementButton />
-        </SampleContext.Provider>
-    );
+  return (
+    <SampleContext.Provider>
+      <IncrementButton />
+      <CountView />
+      <DecrementButton />
+    </SampleContext.Provider>
+  );
 }
 
 function IncrementButton() {
-    const [, { increment }] = useFluxEsseContext(SampleContext);
-    return <button onClick={() => increment()}>+</button>;
+  const [, { increment }] = useFluxEsseContext(SampleContext);
+  return <button onClick={() => increment()}>+</button>;
 }
 
 function CountView() {
-    const [{ count }] = useFluxEsseContext(SampleContext);
-    return <span>{count}</span>;
+  const [{ count }] = useFluxEsseContext(SampleContext);
+  return <span>{count}</span>;
 }
 
 function DecrementButton() {
-    const [, { decrement }] = useFluxEsseContext(SampleContext);
-    return <button onClick={() => decrement()}>-</button>;
+  const [, { decrement }] = useFluxEsseContext(SampleContext);
+  return <button onClick={() => decrement()}>-</button>;
 }
 ```
 

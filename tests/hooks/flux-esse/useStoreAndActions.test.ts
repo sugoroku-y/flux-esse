@@ -1,6 +1,6 @@
 import { act } from '@testing-library/react';
-import { useStoreAndActions } from '@';
-import { renderHookWithError } from '@tests/testing-library/renderHookWithError';
+import { useStoreAndActions } from '../../../src';
+import { renderHookWithError } from '../../testing-library/renderHookWithError';
 
 describe('flux-esse', () => {
     describe('useStoreAndActions', () => {
@@ -156,6 +156,7 @@ describe('flux-esse', () => {
             // 例外が発生するまでの変更が反映されている
             expect(result.current[0].array).toEqual([1, 2]);
         });
+        // eslint-disable-next-line jest/no-disabled-tests -- 型の検査のためなので実行しない
         test.skip('compile test', () => {
             expect(
                 useStoreAndActions({

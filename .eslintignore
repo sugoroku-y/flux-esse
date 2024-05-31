@@ -1,9 +1,3 @@
-package.json
-package-lock.json
 dist/
-node_modules/
-jest*.config.ts
-jest*.config.js
-tools/
 coverage/
-enableMapSet/
+enableMapSet/*.js
