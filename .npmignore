@@ -13,3 +13,4 @@ typedoc*.json
 /tools/
 /.github/
 /enableMapSet/*.ts
+.markdownlint-cli2.jsonc
