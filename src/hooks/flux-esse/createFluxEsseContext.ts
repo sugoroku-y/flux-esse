@@ -240,14 +240,6 @@ function createProvider<Store extends object>(
 }
 
 /**
- * 不正なコンテキストが指定されています。
- * @param invalidContext 不正なコンテキスト
- * @deprecated
- * @hidden
- */
-export function useFluxEsseContext(invalidContext: never): never;
-
-/**
  * {@link createFluxEsseContext}で生成したコンテキストからStoreとActionを取得します。
  * @param context {@link createFluxEsseContext}で生成したコンテキスト
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。

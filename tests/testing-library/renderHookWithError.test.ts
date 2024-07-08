@@ -1,5 +1,4 @@
-import { useRef, useState } from 'react';
-import { act } from '@testing-library/react';
+import { act, useRef, useState } from 'react';
 import { renderHookWithError } from './renderHookWithError';
 
 describe('renderHookWithError', () => {

@@ -130,13 +130,6 @@ export declare function createFluxEsseContext<Store extends object>(initialStore
  */
 export declare function createFluxEsseContext<Store extends object>(storeSpec: Store | (new () => Store), hooks?: Hooks<Store>): Validation<Store, FluxEsseContext<Store>>;
 /**
- * 不正なコンテキストが指定されています。
- * @param invalidContext 不正なコンテキスト
- * @deprecated
- * @hidden
- */
-export declare function useFluxEsseContext(invalidContext: never): never;
-/**
  * {@link createFluxEsseContext}で生成したコンテキストからStoreとActionを取得します。
  * @param context {@link createFluxEsseContext}で生成したコンテキスト
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。

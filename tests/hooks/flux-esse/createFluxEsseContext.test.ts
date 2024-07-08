@@ -1,5 +1,5 @@
-import { createElement, useEffect } from 'react';
-import { act, render } from '@testing-library/react';
+import { act, createElement, useEffect } from 'react';
+import { render } from '@testing-library/react';
 import { createFluxEsseContext, useFluxEsseContext } from '../../../src';
 import { renderHookWithError } from '../../testing-library/renderHookWithError';
 
