@@ -35,7 +35,7 @@
     "devDependencies": {
         "@sugoroku-y/jest-runner-prettier": "github:sugoroku-y/jest-runner-prettier",
         "@sugoroku-y/jest-to-output-to-console-error": "github:sugoroku-y/jest-to-output-to-console-error",
-        "@testing-library/jest-dom": "^6.4.7",
+        "@testing-library/jest-dom": "^6.4.8",
         "@testing-library/react": "^14.3.1",
         "@testing-library/user-event": "^14.5.2",
         "@types/jest": "^29.5.12",
