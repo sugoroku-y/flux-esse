@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasConstructor = void 0;
+exports.hasConstructor = hasConstructor;
 /**
  * 指定のオブジェクトが`constructor`という名前でコンストラクターを保持しているかどうかを確認します。
  * @param target 対象のオブジェクト
@@ -11,5 +11,4 @@ function hasConstructor(target) {
         (target.constructor.prototype === target ||
             target instanceof target.constructor));
 }
-exports.hasConstructor = hasConstructor;
 //# sourceMappingURL=hasConstructor.js.map

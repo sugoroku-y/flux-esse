@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPrototypeOfBuiltIn = void 0;
+exports.isPrototypeOfBuiltIn = isPrototypeOfBuiltIn;
 /**
  * ビルトインクラスのプロトタイプであるかどうかを判別します。
  * @param obj 対象のオブジェクト
@@ -12,5 +12,4 @@ function isPrototypeOfBuiltIn(obj) {
         obj.constructor.prototype === obj &&
         /\{\s*\[native code\]\s*\}\s*$/.test(Function.prototype.toString.call(obj.constructor)));
 }
-exports.isPrototypeOfBuiltIn = isPrototypeOfBuiltIn;
 //# sourceMappingURL=isPrototypeOfBuiltIn.js.map

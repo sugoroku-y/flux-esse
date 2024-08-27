@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.error = void 0;
+exports.error = error;
 /**
  * 指定した文字列のメッセージを持つ例外を投げるタグ付きテンプレートリテラルです。
  * @param args テンプレートリテラルの引数
@@ -11,5 +11,4 @@ function error(...args) {
     Error.captureStackTrace(ex, error);
     throw ex;
 }
-exports.error = error;
 //# sourceMappingURL=error.js.map

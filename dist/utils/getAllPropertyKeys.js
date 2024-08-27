@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllPropertyKeys = void 0;
+exports.getAllPropertyKeys = getAllPropertyKeys;
 const hasConstructor_1 = require("./hasConstructor");
 const prototypes_1 = require("./prototypes");
 /**
@@ -26,5 +26,4 @@ function* getAllPropertyKeys(target) {
         }
     }
 }
-exports.getAllPropertyKeys = getAllPropertyKeys;
 //# sourceMappingURL=getAllPropertyKeys.js.map

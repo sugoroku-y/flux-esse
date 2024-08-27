@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prototypes = void 0;
+exports.prototypes = prototypes;
 const isPrototypeOfBuiltIn_1 = require("./isPrototypeOfBuiltIn");
 /**
  * 指定したオブジェクトのプロトタイプを遡っていく
@@ -14,5 +14,4 @@ function* prototypes(target) {
         yield obj;
     }
 }
-exports.prototypes = prototypes;
 //# sourceMappingURL=prototypes.js.map

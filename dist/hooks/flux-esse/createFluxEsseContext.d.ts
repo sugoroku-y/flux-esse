@@ -81,7 +81,7 @@ export declare function createFluxEsseContext<Store extends object>(StoreClass: 
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
  *
- * [^3]: 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
+ * [^3]: ../../index.ts 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
  * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3]
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
  * @returns StoreとActionを扱うコンテキストを返します。
@@ -117,8 +117,7 @@ export declare function createFluxEsseContext<Store extends object>(initialStore
  * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
  * @returns StoreとActionを扱うコンテキストを返します。
- * @hidden
- * @remark 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
+ * @hidden 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
  * @example
  * function useSomthing<Store extends object>(
  *     storeSpec: Store | (new () => Store),

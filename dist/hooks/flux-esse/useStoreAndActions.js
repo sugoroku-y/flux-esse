@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useStoreAndActions = void 0;
+exports.useStoreAndActions = useStoreAndActions;
 const react_1 = require("react");
 const immer_1 = require("immer");
 const error_1 = require("../../utils/error");
 const getAllPropertyKeys_1 = require("../../utils/getAllPropertyKeys");
+// useStoreAndActionsの実装
+// eslint-disable-next-line jsdoc/require-param, jsdoc/require-returns -- 実装のparam/returnsも重複して表示されるのでここでは除去
 /**
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
- * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
- * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
- * @remark useStoreAndActionsの実装
  */
 function useStoreAndActions(storeSpec) {
     const [store, dispatch] = (0, react_1.useReducer)((reducer), storeSpec, initializer);
@@ -19,7 +18,6 @@ function useStoreAndActions(storeSpec) {
     []);
     return [store, actions];
 }
-exports.useStoreAndActions = useStoreAndActions;
 function reducer(previous, { type, payload }) {
     // 第2引数に指定した関数内でdraftに行われた変更をpreviousにマージした新しいStoreを返値とする
     return (0, immer_1.produce)(previous, (draft) => {

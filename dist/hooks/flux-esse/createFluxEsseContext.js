@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useFluxEsseContext = exports.createFluxEsseContext = void 0;
+exports.createFluxEsseContext = createFluxEsseContext;
+exports.useFluxEsseContext = useFluxEsseContext;
 const react_1 = require("react");
 const error_1 = require("../../utils/error");
 const useStoreAndActions_1 = require("./useStoreAndActions");
@@ -10,12 +11,10 @@ const useStoreAndActions_1 = require("./useStoreAndActions");
  * 不要になったあとにガーベージコレクトされるようにWeakMapを使用する。
  */
 const contextMap = new WeakMap();
+// createFluxEsseContextの実装
+// eslint-disable-next-line jsdoc/require-param, jsdoc/require-returns -- 実装のparam/returnsも重複して表示されるのでここでは除去
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
- * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
- * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
- * @returns StoreとActionを扱うコンテキストを返します。
- * @remark createFluxEsseContextの実装
  */
 function createFluxEsseContext(storeSpec, hooks) {
     const original = (0, react_1.createContext)(undefined);
@@ -35,7 +34,6 @@ function createFluxEsseContext(storeSpec, hooks) {
     contextMap.set(context, original);
     return context;
 }
-exports.createFluxEsseContext = createFluxEsseContext;
 /**
  * Providerコンポーネントを生成します。
  * @param storeSpec {@link useStoreAndActions}に指定するStoreの詳細
@@ -53,11 +51,10 @@ function createProvider(storeSpec, { Provider: original }, hooks) {
         return (0, react_1.createElement)(original, { value, ...props });
     };
 }
+// useFluxEsseContextの実装
+// eslint-disable-next-line jsdoc/require-param, jsdoc/require-returns -- 実装のparam/returnsも重複して表示されるのでここでは除去
 /**
  * {@link createFluxEsseContext}で生成したコンテキストからStoreとActionを取得します。
- * @param context {@link createFluxEsseContext}で生成したコンテキスト
- * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
- * @remark useFluxEsseContextの実装
  */
 function useFluxEsseContext(context) {
     const original = contextMap.get(context) ??
@@ -65,5 +62,4 @@ function useFluxEsseContext(context) {
     return ((0, react_1.useContext)(original) ??
         (0, error_1.error) `useFluxEsseContext must be used within the descendant component of ${context.displayName}.Provider.`);
 }
-exports.useFluxEsseContext = useFluxEsseContext;
 //# sourceMappingURL=createFluxEsseContext.js.map
