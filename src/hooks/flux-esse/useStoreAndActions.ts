@@ -87,7 +87,7 @@ export type Validation<Store extends object, T> = [
 /**
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
  *
- * [^1]: publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
+ * [^1]: ../../index.ts publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
  * @param StoreClass 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
  *
@@ -114,7 +114,7 @@ export function useStoreAndActions<Store extends object>(
 /**
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
  *
- * [^2]: このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。
+ * [^2]: ../../index.ts 'このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。'
  * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^2]
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
  *
@@ -142,8 +142,7 @@ export function useStoreAndActions<Store extends object>(
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
  * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
- * @hidden
- * @remark 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
+ * @hidden 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
  * @example
  * function useSomthing<Store extends object>(
  *     storeSpec: Store | (new () => Store),
@@ -155,11 +154,11 @@ export function useStoreAndActions<Store extends object>(
 export function useStoreAndActions<Store extends object>(
     storeSpec: Store | (new () => Store),
 ): Validation<Store, StoreAndActions<Store>>;
+
+// useStoreAndActionsの実装
+// eslint-disable-next-line jsdoc/require-param, jsdoc/require-returns -- 実装のparam/returnsも重複して表示されるのでここでは除去
 /**
  * FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
- * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
- * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
- * @remark useStoreAndActionsの実装
  */
 export function useStoreAndActions<Store extends object>(
     storeSpec: Store | (new () => Store),

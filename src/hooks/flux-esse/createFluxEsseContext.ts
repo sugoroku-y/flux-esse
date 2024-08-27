@@ -132,7 +132,7 @@ export function createFluxEsseContext<Store extends object>(
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
  *
- * [^3]: 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
+ * [^3]: ../../index.ts 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
  * @param initialStore 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3]
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
  * @returns StoreとActionを扱うコンテキストを返します。
@@ -171,8 +171,7 @@ export function createFluxEsseContext<Store extends object>(
  * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
  * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
  * @returns StoreとActionを扱うコンテキストを返します。
- * @hidden
- * @remark 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
+ * @hidden 別のカスタムフックなどから呼び出す際に使用するシグネチャーです。
  * @example
  * function useSomthing<Store extends object>(
  *     storeSpec: Store | (new () => Store),
@@ -186,12 +185,10 @@ export function createFluxEsseContext<Store extends object>(
     storeSpec: Store | (new () => Store),
     hooks?: Hooks<Store>,
 ): Validation<Store, FluxEsseContext<Store>>;
+// createFluxEsseContextの実装
+// eslint-disable-next-line jsdoc/require-param, jsdoc/require-returns -- 実装のparam/returnsも重複して表示されるのでここでは除去
 /**
  * {@link useStoreAndActions}が返すStoreとActionを扱うコンテキストを生成します。
- * @param storeSpec 初期状態のStoreのプロパティとActionを処理するハンドラーを持つオブジェクト、もしくはクラスです。
- * @param hooks コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
- * @returns StoreとActionを扱うコンテキストを返します。
- * @remark createFluxEsseContextの実装
  */
 export function createFluxEsseContext<Store extends object>(
     storeSpec: Store | (new () => Store),
@@ -261,11 +258,11 @@ function createProvider<Store extends object>(
 export function useFluxEsseContext<Store extends object>(
     context: FluxEsseContext<Store>,
 ): Validation<Store, StoreAndActions<Store>>;
+
+// useFluxEsseContextの実装
+// eslint-disable-next-line jsdoc/require-param, jsdoc/require-returns -- 実装のparam/returnsも重複して表示されるのでここでは除去
 /**
  * {@link createFluxEsseContext}で生成したコンテキストからStoreとActionを取得します。
- * @param context {@link createFluxEsseContext}で生成したコンテキスト
- * @returns StoreとActionを発行するメソッドを持つオブジェクトを返します。
- * @remark useFluxEsseContextの実装
  */
 export function useFluxEsseContext<Store extends object>(
     context: FluxEsseContext<Store>,

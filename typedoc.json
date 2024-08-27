@@ -17,6 +17,8 @@
     "sort": ["required-first"],
     "hideBreadcrumbs": true,
     "out": ".",
-    "entryDocument": "api.md",
+    "entryFileName": "api.md",
+    "hidePageHeader": true,
+    "outputFileStrategy": "modules",
     "logLevel": "Warn"
 }

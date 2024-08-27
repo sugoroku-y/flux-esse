@@ -1,36 +1,30 @@
 # @sugoroku-y/flux-esse
 
-## Table of contents
-
-### Functions
-
-- [useStoreAndActions](api.md#usestoreandactions)
-- [createFluxEsseContext](api.md#createfluxessecontext)
-- [useFluxEsseContext](api.md#usefluxessecontext)
-
 ## Functions
 
-### useStoreAndActions
-
-▸ **useStoreAndActions**\<`Store`\>(`StoreClass`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
+### useStoreAndActions()
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-[^1]: publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
+#### useStoreAndActions(StoreClass)
 
-#### Type parameters
+> **useStoreAndActions**\<`Store`\>(`StoreClass`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
-| Name | Type |
-| :------ | :------ |
-| `Store` | extends `object` |
+FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-#### Parameters
+[^1]: api.md publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。 |
+##### Type Parameters
 
-#### Returns
+• **Store** *extends* `object`
+
+##### Parameters
+
+• **StoreClass**
+
+初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
+
+##### Returns
 
 `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
@@ -43,7 +37,7 @@ Actionを発行するメソッドはthisと関連付けられていないため�
 StoreClassが1つもハンドラーを持たない場合、返値の型がnever型となり、
 StoreやActionが利用できなくなります。
 
-**`Example`**
+##### Example
 
 ```ts
 const [store, {change}] = useStoreAndActions(class {
@@ -54,31 +48,31 @@ const [store, {change}] = useStoreAndActions(class {
 });
 ```
 
-**`Throws`**
+##### Throws
 
 以下の場合に例外を投げます。
 
 - StoreClassとして1つもハンドラーを持たないクラスが指定された場合。
 
-▸ **useStoreAndActions**\<`Store`\>(`initialStore`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
+#### useStoreAndActions(initialStore)
+
+> **useStoreAndActions**\<`Store`\>(`initialStore`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-[^2]: このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。
+[^2]: api.md 'このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。'
 
-#### Type parameters
+##### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Store` | extends `object` |
+• **Store** *extends* `object`
 
-#### Parameters
+##### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^2] |
+• **initialStore**: `Store`
 
-#### Returns
+初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^2]
+
+##### Returns
 
 `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
@@ -91,7 +85,7 @@ Actionを発行するメソッドはthisと関連付けられていないため�
 initialStoreが1つもハンドラーを持たない場合、返値の型がnever型となり、
 StoreやActionが利用できなくなります。
 
-**`Example`**
+##### Example
 
 ```ts
 const [store, {change}] = useStoreAndActions({
@@ -102,34 +96,39 @@ const [store, {change}] = useStoreAndActions({
 });
 ```
 
-**`Throws`**
+##### Throws
 
 以下の場合に例外を投げます。
 
 - initialStoreとして1つもハンドラーを持たないオブジェクトが指定された場合。
 
-___
+***
 
-### createFluxEsseContext
-
-▸ **createFluxEsseContext**\<`Store`\>(`StoreClass`, `hooks?`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
+### createFluxEsseContext()
 
 [useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
-#### Type parameters
+#### createFluxEsseContext(StoreClass, hooks)
 
-| Name | Type |
-| :------ | :------ |
-| `Store` | extends `object` |
+> **createFluxEsseContext**\<`Store`\>(`StoreClass`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
-#### Parameters
+[useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `StoreClass` | () => `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。 |
-| `hooks?` | `Hooks`\<`Store`\> | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
+##### Type Parameters
 
-#### Returns
+• **Store** *extends* `object`
+
+##### Parameters
+
+• **StoreClass**
+
+初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
+
+• **hooks?**: `Hooks`\<`Store`\>
+
+コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
+
+##### Returns
 
 `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
@@ -138,7 +137,7 @@ StoreとActionを扱うコンテキストを返します。
 StoreClassが1つもハンドラーを持たない場合、返値の型がnever型となり、
 コンテキストとして利用できなくなります。
 
-**`Example`**
+##### Example
 
 ```ts
 const SampleContext = createFluxEsseContext(
@@ -164,26 +163,29 @@ const SampleContext = createFluxEsseContext(
 });
 ```
 
-▸ **createFluxEsseContext**\<`Store`\>(`initialStore`, `hooks?`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
+#### createFluxEsseContext(initialStore, hooks)
+
+> **createFluxEsseContext**\<`Store`\>(`initialStore`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 [useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
-[^3]: 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
+[^3]: api.md 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
 
-#### Type parameters
+##### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Store` | extends `object` |
+• **Store** *extends* `object`
 
-#### Parameters
+##### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `initialStore` | `Store` | 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3] |
-| `hooks?` | `Hooks`\<`Store`\> | コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。 |
+• **initialStore**: `Store`
 
-#### Returns
+初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3]
+
+• **hooks?**: `Hooks`\<`Store`\>
+
+コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
+
+##### Returns
 
 `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
@@ -192,7 +194,7 @@ StoreとActionを扱うコンテキストを返します。
 initialStoreが1つもハンドラーを持たない場合、返値の型がnever型となり、
 コンテキストとして利用できなくなります。
 
-**`Example`**
+##### Example
 
 ```ts
 const SampleContext = createFluxEsseContext(
@@ -218,25 +220,23 @@ const SampleContext = createFluxEsseContext(
 );
 ```
 
-___
+***
 
-### useFluxEsseContext
+### useFluxEsseContext()
 
-▸ **useFluxEsseContext**\<`Store`\>(`context`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
+> **useFluxEsseContext**\<`Store`\>(`context`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
 [createFluxEsseContext](api.md#createfluxessecontext)で生成したコンテキストからStoreとActionを取得します。
 
-#### Type parameters
+#### Type Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Store` | extends `object` |
+• **Store** *extends* `object`
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `context` | `FluxEsseContext`\<`Store`\> | [createFluxEsseContext](api.md#createfluxessecontext)で生成したコンテキスト |
+• **context**: `FluxEsseContext`\<`Store`\>
+
+[createFluxEsseContext](api.md#createfluxessecontext)で生成したコンテキスト
 
 #### Returns
 
@@ -252,13 +252,13 @@ contextが[createFluxEsseContext](api.md#createfluxessecontext)で生成され�
 contextを作成したときの[createFluxEsseContext](api.md#createfluxessecontext)に指定されたStoreが1つもハンドラーを持たない場合、
 返値の型がnever型となり、StoreやActionが利用できなくなります。
 
-**`Example`**
+#### Example
 
 ```ts
 const [store, {change}] = useFluxEsseContext(SampleContext);
 ```
 
-**`Throws`**
+#### Throws
 
 以下の場合に例外を投げます。
 
