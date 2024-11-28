@@ -1,3 +1,4 @@
 dist/
 coverage/
 enableMapSet/*.js
+_media/

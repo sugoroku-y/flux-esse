@@ -6,13 +6,13 @@
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-#### useStoreAndActions(StoreClass)
+#### Call Signature
 
 > **useStoreAndActions**\<`Store`\>(`StoreClass`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-[^1]: api.md publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
+[^1]: _media/index.ts publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
 
 ##### Type Parameters
 
@@ -20,7 +20,9 @@ FLUXアーキテクチャーのエッセンスを実現するカスタムフッ�
 
 ##### Parameters
 
-• **StoreClass**
+###### StoreClass
+
+() => `Store`
 
 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
 
@@ -54,13 +56,13 @@ const [store, {change}] = useStoreAndActions(class {
 
 - StoreClassとして1つもハンドラーを持たないクラスが指定された場合。
 
-#### useStoreAndActions(initialStore)
+#### Call Signature
 
 > **useStoreAndActions**\<`Store`\>(`initialStore`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-[^2]: api.md 'このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。'
+[^2]: _media/index.ts 'このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。'
 
 ##### Type Parameters
 
@@ -68,7 +70,9 @@ FLUXアーキテクチャーのエッセンスを実現するカスタムフッ�
 
 ##### Parameters
 
-• **initialStore**: `Store`
+###### initialStore
+
+`Store`
 
 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^2]
 
@@ -108,7 +112,7 @@ const [store, {change}] = useStoreAndActions({
 
 [useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
-#### createFluxEsseContext(StoreClass, hooks)
+#### Call Signature
 
 > **createFluxEsseContext**\<`Store`\>(`StoreClass`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
@@ -120,11 +124,15 @@ const [store, {change}] = useStoreAndActions({
 
 ##### Parameters
 
-• **StoreClass**
+###### StoreClass
+
+() => `Store`
 
 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つクラスです。
 
-• **hooks?**: `Hooks`\<`Store`\>
+###### hooks?
+
+`Hooks`\<`Store`\>
 
 コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
 
@@ -163,13 +171,13 @@ const SampleContext = createFluxEsseContext(
 });
 ```
 
-#### createFluxEsseContext(initialStore, hooks)
+#### Call Signature
 
 > **createFluxEsseContext**\<`Store`\>(`initialStore`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 [useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
-[^3]: api.md 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
+[^3]: _media/index.ts 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
 
 ##### Type Parameters
 
@@ -177,11 +185,15 @@ const SampleContext = createFluxEsseContext(
 
 ##### Parameters
 
-• **initialStore**: `Store`
+###### initialStore
+
+`Store`
 
 初期状態のStoreのプロパティとActionを処理するハンドラー[^1]を持つオブジェクトです。[^3]
 
-• **hooks?**: `Hooks`\<`Store`\>
+###### hooks?
+
+`Hooks`\<`Store`\>
 
 コンテキストのProviderをレンダリングするときに呼び出されるフックです。省略可能です。
 
@@ -234,7 +246,9 @@ const SampleContext = createFluxEsseContext(
 
 #### Parameters
 
-• **context**: `FluxEsseContext`\<`Store`\>
+##### context
+
+`FluxEsseContext`\<`Store`\>
 
 [createFluxEsseContext](api.md#createfluxessecontext)で生成したコンテキスト
 
