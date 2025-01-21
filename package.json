@@ -37,7 +37,7 @@
         "@sugoroku-y/jest-to-output-to-console-error": "github:sugoroku-y/jest-to-output-to-console-error",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/react": "^14.3.1",
-        "@testing-library/user-event": "^14.6.0",
+        "@testing-library/user-event": "^14.6.1",
         "@types/jest": "^29.5.14",
         "@types/react": "^18.3.18",
         "@typescript-eslint/eslint-plugin": "^7.18.0",
