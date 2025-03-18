@@ -16,7 +16,9 @@ FLUXアーキテクチャーのエッセンスを実現するカスタムフッ�
 
 ##### Type Parameters
 
-• **Store** *extends* `object`
+###### Store
+
+`Store` *extends* `object`
 
 ##### Parameters
 
@@ -66,7 +68,9 @@ FLUXアーキテクチャーのエッセンスを実現するカスタムフッ�
 
 ##### Type Parameters
 
-• **Store** *extends* `object`
+###### Store
+
+`Store` *extends* `object`
 
 ##### Parameters
 
@@ -110,17 +114,19 @@ const [store, {change}] = useStoreAndActions({
 
 ### createFluxEsseContext()
 
-[useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
+[useStoreAndActions](#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
 #### Call Signature
 
 > **createFluxEsseContext**\<`Store`\>(`StoreClass`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
-[useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
+[useStoreAndActions](#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
 ##### Type Parameters
 
-• **Store** *extends* `object`
+###### Store
+
+`Store` *extends* `object`
 
 ##### Parameters
 
@@ -175,13 +181,15 @@ const SampleContext = createFluxEsseContext(
 
 > **createFluxEsseContext**\<`Store`\>(`initialStore`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
-[useStoreAndActions](api.md#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
+[useStoreAndActions](#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
 [^3]: _media/index.ts 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
 
 ##### Type Parameters
 
-• **Store** *extends* `object`
+###### Store
+
+`Store` *extends* `object`
 
 ##### Parameters
 
@@ -238,11 +246,13 @@ const SampleContext = createFluxEsseContext(
 
 > **useFluxEsseContext**\<`Store`\>(`context`): `Validation`\<`Store`, `StoreAndActions`\<`Store`\>\>
 
-[createFluxEsseContext](api.md#createfluxessecontext)で生成したコンテキストからStoreとActionを取得します。
+[createFluxEsseContext](#createfluxessecontext)で生成したコンテキストからStoreとActionを取得します。
 
 #### Type Parameters
 
-• **Store** *extends* `object`
+##### Store
+
+`Store` *extends* `object`
 
 #### Parameters
 
@@ -250,7 +260,7 @@ const SampleContext = createFluxEsseContext(
 
 `FluxEsseContext`\<`Store`\>
 
-[createFluxEsseContext](api.md#createfluxessecontext)で生成したコンテキスト
+[createFluxEsseContext](#createfluxessecontext)で生成したコンテキスト
 
 #### Returns
 
@@ -262,8 +272,8 @@ StoreとActionを発行するメソッドを持つオブジェクトを返しま
 
 Actionを発行するメソッドはthisと関連付けられていないため、spread展開で取得可能です。
 
-contextが[createFluxEsseContext](api.md#createfluxessecontext)で生成されていない場合や、
-contextを作成したときの[createFluxEsseContext](api.md#createfluxessecontext)に指定されたStoreが1つもハンドラーを持たない場合、
+contextが[createFluxEsseContext](#createfluxessecontext)で生成されていない場合や、
+contextを作成したときの[createFluxEsseContext](#createfluxessecontext)に指定されたStoreが1つもハンドラーを持たない場合、
 返値の型がnever型となり、StoreやActionが利用できなくなります。
 
 #### Example
@@ -276,5 +286,5 @@ const [store, {change}] = useFluxEsseContext(SampleContext);
 
 以下の場合に例外を投げます。
 
-- [createFluxEsseContext](api.md#createfluxessecontext)で生成されていないコンテキストを指定した場合。
+- [createFluxEsseContext](#createfluxessecontext)で生成されていないコンテキストを指定した場合。
 - FluxEsseContext.Providerの中ではない場所で使用された場合。
