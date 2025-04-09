@@ -118,7 +118,7 @@ const [store, {change}] = useStoreAndActions({
 
 #### Call Signature
 
-> **createFluxEsseContext**\<`Store`\>(`StoreClass`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
+> **createFluxEsseContext**\<`Store`\>(`StoreClass`, `hooks?`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 [useStoreAndActions](#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
@@ -179,7 +179,7 @@ const SampleContext = createFluxEsseContext(
 
 #### Call Signature
 
-> **createFluxEsseContext**\<`Store`\>(`initialStore`, `hooks`?): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
+> **createFluxEsseContext**\<`Store`\>(`initialStore`, `hooks?`): `Validation`\<`Store`, `FluxEsseContext`\<`Store`\>\>
 
 [useStoreAndActions](#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
