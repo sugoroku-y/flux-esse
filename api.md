@@ -12,7 +12,7 @@ FLUXアーキテクチャーのエッセンスを実現するカスタムフッ�
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-[^1]: _media/index.ts publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
+[^1]: ../../index.ts publicで返値がvoid型のインスタンスメソッドをActionを処理するハンドラーと見なします。
 
 ##### Type Parameters
 
@@ -64,7 +64,7 @@ const [store, {change}] = useStoreAndActions(class {
 
 FLUXアーキテクチャーのエッセンスを実現するカスタムフックです。
 
-[^2]: _media/index.ts 'このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。'
+[^2]: ../../index.ts 'このカスタムフックを呼び出したあと、initialStoreに指定したオブジェクトは変更不可になります。'
 
 ##### Type Parameters
 
@@ -183,7 +183,7 @@ const SampleContext = createFluxEsseContext(
 
 [useStoreAndActions](#usestoreandactions)が返すStoreとActionを扱うコンテキストを生成します。
 
-[^3]: _media/index.ts 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
+[^3]: ../../index.ts 返値のコンテキストにあるProviderがレンダリングされたあと、initialStoreに指定したオブジェクトは変更不可になります。
 
 ##### Type Parameters
 
