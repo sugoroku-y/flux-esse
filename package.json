@@ -35,11 +35,11 @@
     "devDependencies": {
         "@sugoroku-y/jest-runner-prettier": "github:sugoroku-y/jest-runner-prettier",
         "@sugoroku-y/jest-to-output-to-console-error": "github:sugoroku-y/jest-to-output-to-console-error",
-        "@testing-library/jest-dom": "^6.8.0",
+        "@testing-library/jest-dom": "^6.9.0",
         "@testing-library/react": "^14.3.1",
         "@testing-library/user-event": "^14.6.1",
         "@types/jest": "^29.5.14",
-        "@types/react": "^18.3.24",
+        "@types/react": "^18.3.25",
         "@typescript-eslint/eslint-plugin": "^7.18.0",
         "@typescript-eslint/parser": "^7.18.0",
         "eslint": "^8.57.1",
@@ -67,6 +67,6 @@
         "ts-node": "^10.9.2",
         "typedoc": "^0.28.13",
         "typedoc-plugin-markdown": "^4.9.0",
-        "typescript": "^5.9.2"
+        "typescript": "^5.9.3"
     }
 }
