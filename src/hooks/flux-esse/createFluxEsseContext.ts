@@ -73,8 +73,10 @@ interface FluxEsseContext<Store extends object> {
  * 引数で指定したcontextが使用するStoreと対応するOriginalContext<Store>を取得・設定します。
  * @interface ContextMap
  */
-interface ContextMap
-    extends WeakMap<FluxEsseContext<object>, OriginalContext<object>> {
+interface ContextMap extends WeakMap<
+    FluxEsseContext<object>,
+    OriginalContext<object>
+> {
     get<Store extends object>(
         context: FluxEsseContext<Store>,
     ): OriginalContext<Store> | undefined;
